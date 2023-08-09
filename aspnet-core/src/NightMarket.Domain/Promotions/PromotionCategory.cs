@@ -13,3 +13,4 @@ namespace NightMarket.Promotions
         public Guid PromotionId { get; set; }
 
     }
+}

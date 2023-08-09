@@ -4,12 +4,9 @@ using System.Text;
 
 namespace NightMarket.ProductAttributes
 {
-    public enum AttributeType
+    public class AttributeConst
     {
-        Int = 1,
-        Varchar = 2,
-        Text = 3,
-        Decimal = 4,
-        Date = 5,
+        public const int MaxCodeLength = 50;
+        public const int MaxLabelLength = 50;
     }
 }

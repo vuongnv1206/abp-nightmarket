@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace NightMarket.Attributes
+namespace NightMarket.ProductAttributes
 {
-    public class Attribute : CreationAuditedAggregateRoot<Guid>
+    public class ProductAttribute : CreationAuditedAggregateRoot<Guid>
     {
         public string Code { get; set; }
         public AttributeType DataType { get; set; }
