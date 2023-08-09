@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace NightMarket.Migrations
 {
     [DbContext(typeof(NightMarketDbContext))]
-    [Migration("20230807160016_Initial")]
+    [Migration("20230808162016_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

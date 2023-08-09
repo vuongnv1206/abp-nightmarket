@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NightMarket.HttpApi.Client.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NightMarket.DbMigrator", "src\NightMarket.DbMigrator\NightMarket.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity", "identity", "{F9FCBBD5-3B95-4AF2-80C8-1F8FBD2D95CD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "auth", "auth", "{F9FCBBD5-3B95-4AF2-80C8-1F8FBD2D95CD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{DC074B53-1649-485E-A5ED-8DAEA3EF6C00}"
 EndProject
