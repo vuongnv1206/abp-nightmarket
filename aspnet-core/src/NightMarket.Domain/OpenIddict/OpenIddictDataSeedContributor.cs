@@ -61,7 +61,19 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         if (await _openIddictScopeRepository.FindByNameAsync("NightMarket") == null)
         {
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor {
-                Name = "NightMarket", DisplayName = "NightMarket API", Resources = { "NightMarket" }
+                Name = "NightMarket",
+                DisplayName = "NightMarket API",
+                Resources = { "NightMarket" }
+            });
+        }
+
+        if (await _openIddictScopeRepository.FindByNameAsync("NightMarket.Admin") == null)
+        {
+            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "NightMarket.Admin",
+                DisplayName = "NightMarket Admin API",
+                Resources = { "NightMarket.Admin" }
             });
         }
     }
@@ -79,6 +91,33 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
+        //Admin Client
+        var webAdminClientId = configurationSection["NightMarket_Admin:ClientId"];
+        if (!webAdminClientId.IsNullOrWhiteSpace())
+        {
+            var webClientRootUrl = configurationSection["NightMarket_Admin:RootUrl"].EnsureEndsWith('/');
+
+            /* NightMarket_Web client is only needed if you created a tiered
+             * solution. Otherwise, you can delete this client. */
+            await CreateApplicationAsync(
+                name: webAdminClientId!,
+                type: OpenIddictConstants.ClientTypes.Confidential,
+                consentType: OpenIddictConstants.ConsentTypes.Implicit,
+                displayName: "Admin Application",
+                secret: configurationSection["NightMarket_Admin:ClientSecret"] ?? "1q2w3e*",
+                grantTypes: new List<string> //Hybrid flow
+                {
+                    OpenIddictConstants.GrantTypes.Password,
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    OpenIddictConstants.GrantTypes.Implicit
+                },
+                scopes: commonScopes,
+                redirectUri: $"{webClientRootUrl}signin-oidc",
+                clientUri: webClientRootUrl,
+                postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
+            );
+        }
+
         //Web Client
         var webClientId = configurationSection["NightMarket_Web:ClientId"];
         if (!webClientId.IsNullOrWhiteSpace())
@@ -95,7 +134,8 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 secret: configurationSection["NightMarket_Web:ClientSecret"] ?? "1q2w3e*",
                 grantTypes: new List<string> //Hybrid flow
                 {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit
+                    OpenIddictConstants.GrantTypes.AuthorizationCode,
+                    OpenIddictConstants.GrantTypes.Implicit
                 },
                 scopes: commonScopes,
                 redirectUri: $"{webClientRootUrl}signin-oidc",
@@ -104,92 +144,93 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             );
         }
 
-        //Console Test / Angular Client
-        var consoleAndAngularClientId = configurationSection["NightMarket_App:ClientId"];
-        if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
-        {
-            var consoleAndAngularClientRootUrl = configurationSection["NightMarket_App:RootUrl"]?.TrimEnd('/');
-            await CreateApplicationAsync(
-                name: consoleAndAngularClientId!,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Console Test / Angular Application",
-                secret: null,
-                grantTypes: new List<string> {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Password,
-                    OpenIddictConstants.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.GrantTypes.RefreshToken
-                },
-                scopes: commonScopes,
-                redirectUri: consoleAndAngularClientRootUrl,
-                clientUri: consoleAndAngularClientRootUrl,
-                postLogoutRedirectUri: consoleAndAngularClientRootUrl
-            );
-        }
 
-        // Blazor Client
-        var blazorClientId = configurationSection["NightMarket_Blazor:ClientId"];
-        if (!blazorClientId.IsNullOrWhiteSpace())
-        {
-            var blazorRootUrl = configurationSection["NightMarket_Blazor:RootUrl"]?.TrimEnd('/');
+        ////Console Test / Angular Client
+        //var consoleAndAngularClientId = configurationSection["NightMarket_App:ClientId"];
+        //if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
+        //{
+        //    var consoleAndAngularClientRootUrl = configurationSection["NightMarket_App:RootUrl"]?.TrimEnd('/');
+        //    await CreateApplicationAsync(
+        //        name: consoleAndAngularClientId!,
+        //        type: OpenIddictConstants.ClientTypes.Public,
+        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
+        //        displayName: "Console Test / Angular Application",
+        //        secret: null,
+        //        grantTypes: new List<string> {
+        //            OpenIddictConstants.GrantTypes.AuthorizationCode,
+        //            OpenIddictConstants.GrantTypes.Password,
+        //            OpenIddictConstants.GrantTypes.ClientCredentials,
+        //            OpenIddictConstants.GrantTypes.RefreshToken
+        //        },
+        //        scopes: commonScopes,
+        //        redirectUri: consoleAndAngularClientRootUrl,
+        //        clientUri: consoleAndAngularClientRootUrl,
+        //        postLogoutRedirectUri: consoleAndAngularClientRootUrl
+        //    );
+        //}
 
-            await CreateApplicationAsync(
-                name: blazorClientId!,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Application",
-                secret: null,
-                grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
-                scopes: commonScopes,
-                redirectUri: $"{blazorRootUrl}/authentication/login-callback",
-                clientUri: blazorRootUrl,
-                postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback"
-            );
-        }
+        //// Blazor Client
+        //var blazorClientId = configurationSection["NightMarket_Blazor:ClientId"];
+        //if (!blazorClientId.IsNullOrWhiteSpace())
+        //{
+        //    var blazorRootUrl = configurationSection["NightMarket_Blazor:RootUrl"]?.TrimEnd('/');
 
-        // Blazor Server Tiered Client
-        var blazorServerTieredClientId = configurationSection["NightMarket_BlazorServerTiered:ClientId"];
-        if (!blazorServerTieredClientId.IsNullOrWhiteSpace())
-        {
-            var blazorServerTieredRootUrl =
-                configurationSection["NightMarket_BlazorServerTiered:RootUrl"].EnsureEndsWith('/');
+        //    await CreateApplicationAsync(
+        //        name: blazorClientId!,
+        //        type: OpenIddictConstants.ClientTypes.Public,
+        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
+        //        displayName: "Blazor Application",
+        //        secret: null,
+        //        grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
+        //        scopes: commonScopes,
+        //        redirectUri: $"{blazorRootUrl}/authentication/login-callback",
+        //        clientUri: blazorRootUrl,
+        //        postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback"
+        //    );
+        //}
 
-            await CreateApplicationAsync(
-                name: blazorServerTieredClientId!,
-                type: OpenIddictConstants.ClientTypes.Confidential,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Server Application",
-                secret: configurationSection["NightMarket_BlazorServerTiered:ClientSecret"] ?? "1q2w3e*",
-                grantTypes: new List<string> //Hybrid flow
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit
-                },
-                scopes: commonScopes,
-                redirectUri: $"{blazorServerTieredRootUrl}signin-oidc",
-                clientUri: blazorServerTieredRootUrl,
-                postLogoutRedirectUri: $"{blazorServerTieredRootUrl}signout-callback-oidc"
-            );
-        }
+        //// Blazor Server Tiered Client
+        //var blazorServerTieredClientId = configurationSection["NightMarket_BlazorServerTiered:ClientId"];
+        //if (!blazorServerTieredClientId.IsNullOrWhiteSpace())
+        //{
+        //    var blazorServerTieredRootUrl =
+        //        configurationSection["NightMarket_BlazorServerTiered:RootUrl"].EnsureEndsWith('/');
 
-        // Swagger Client
-        var swaggerClientId = configurationSection["NightMarket_Swagger:ClientId"];
-        if (!swaggerClientId.IsNullOrWhiteSpace())
-        {
-            var swaggerRootUrl = configurationSection["NightMarket_Swagger:RootUrl"]?.TrimEnd('/');
+        //    await CreateApplicationAsync(
+        //        name: blazorServerTieredClientId!,
+        //        type: OpenIddictConstants.ClientTypes.Confidential,
+        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
+        //        displayName: "Blazor Server Application",
+        //        secret: configurationSection["NightMarket_BlazorServerTiered:ClientSecret"] ?? "1q2w3e*",
+        //        grantTypes: new List<string> //Hybrid flow
+        //        {
+        //            OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit
+        //        },
+        //        scopes: commonScopes,
+        //        redirectUri: $"{blazorServerTieredRootUrl}signin-oidc",
+        //        clientUri: blazorServerTieredRootUrl,
+        //        postLogoutRedirectUri: $"{blazorServerTieredRootUrl}signout-callback-oidc"
+        //    );
+        //}
 
-            await CreateApplicationAsync(
-                name: swaggerClientId!,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Swagger Application",
-                secret: null,
-                grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
-                scopes: commonScopes,
-                redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
-                clientUri: swaggerRootUrl
-            );
-        }
+        //// Swagger Client
+        //var swaggerClientId = configurationSection["NightMarket_Swagger:ClientId"];
+        //if (!swaggerClientId.IsNullOrWhiteSpace())
+        //{
+        //    var swaggerRootUrl = configurationSection["NightMarket_Swagger:RootUrl"]?.TrimEnd('/');
+
+        //    await CreateApplicationAsync(
+        //        name: swaggerClientId!,
+        //        type: OpenIddictConstants.ClientTypes.Public,
+        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
+        //        displayName: "Swagger Application",
+        //        secret: null,
+        //        grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
+        //        scopes: commonScopes,
+        //        redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
+        //        clientUri: swaggerRootUrl
+        //    );
+        //}
     }
 
     private async Task CreateApplicationAsync(
