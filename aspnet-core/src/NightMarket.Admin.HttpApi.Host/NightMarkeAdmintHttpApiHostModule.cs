@@ -199,7 +199,7 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
 
             var configuration = context.GetConfiguration();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes("NightMarket");
+            options.OAuthScopes("NightMarket.Admin");
         });
 
         app.UseAuditing();

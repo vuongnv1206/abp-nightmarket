@@ -56,7 +56,7 @@ public class NightMarketAuthServerModule : AbpModule
         {
             builder.AddValidation(options =>
             {
-                options.AddAudiences("NightMarket");
+                options.AddAudiences("NightMarket", "NightMarket.Admin");
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
