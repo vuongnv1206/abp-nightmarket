@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-
+import { LoginRequestDto } from 'src/app/shared/models/login-request.dto';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Subject,takeUntil } from 'rxjs';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from 'src/app/shared/constants/keys.const';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -13,11 +18,62 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
         }
     `]
 })
-export class LoginComponent {
-
+export class LoginComponent implements OnDestroy {
+    private ngUnsubscribe = new Subject<void>();
     valCheck: string[] = ['remember'];
 
     password!: string;
 
-    constructor(public layoutService: LayoutService) { }
+    loginForm: FormGroup;
+
+    constructor(
+      public layoutService: LayoutService,
+      private fb:FormBuilder,
+      private authService : AuthService,
+      private router: Router
+      ) {
+      this.loginForm = this.fb.group({
+        username: new FormControl('',Validators.required),
+        password: new FormControl('',Validators.required)
+      });
+     }
+
+
+
+    //  login() {
+    //   var request : LoginRequestDto = {
+    //     username :this.loginForm.controls['username'].value,
+    //     password :this.loginForm.controls['password'].value,
+    //   }
+    //   this.authService
+    //   .login(request)
+    //   .pipe(takeUntil(this.ngUnsubscribe))
+    //   .subscribe(res => {
+    //     console.log(res.access_token);
+    //     localStorage.setItem(ACCESS_TOKEN,res.access_token);
+    //     localStorage.setItem(REFRESH_TOKEN,res.refresh_token);
+    //     this.router.navigate(['']);
+    //   });
+    //  }
+
+    login() {
+      var request: LoginRequestDto = {
+        username: this.loginForm.controls['username'].value,
+        password: this.loginForm.controls['password'].value,
+      };
+      this.authService
+        .login(request)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(res => {
+          console.log(res);
+          localStorage.setItem(ACCESS_TOKEN, res.access_token);
+          localStorage.setItem(REFRESH_TOKEN, res.refresh_token);
+          this.router.navigate(['']);
+        });
+    }
+
+     ngOnDestroy(): void {
+      this.ngUnsubscribe.next();
+      this.ngUnsubscribe.complete();
+    }
 }
