@@ -9,21 +9,22 @@
       <div class="formgroup-inline">
         <div class="field">
           <label for="txt-keyword" class="p-sr-only">Keyword</label>
-          <input
-            id="txt-keyword" pInputText
-            type="text"
-            placeholder="Enter keyword" 
-          />
+          <input id="txt-keyword" pInputText type="text" placeholder="Enter keyword" />
         </div>
         <div class="field">
-          <p-dropdown [options]="productCategories" [ngModel]="categoryId" placeholder="Select category"></p-dropdown>
+          <p-dropdown
+            [options]="productCategories"
+            [ngModel]="categoryId"
+            placeholder="Select category"
+          ></p-dropdown>
         </div>
-        <button label="Search" pButton
-          icon = "fa fa-search"
+        <button
+          label="Search"
+          pButton
+          icon="fa fa-search"
           type="button"
           (click)="loadProductCategories()"
-        >
-        </button>
+        ></button>
       </div>
     </div>
   </div>
@@ -84,6 +85,13 @@
 
   <p-blockUI [target]="panel" [blocked]="blockedPanel">
     <i class="pi pi-lock" style="font-size: 3rem"></i>
+
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem"
+      strokeWidth="8"
+      fill="var(--surface-ground)"
+      animationDuration="1s"
+    ></p-progressSpinner>
   </p-blockUI>
 
   <p-panel #pnl header="Panel Header"> Content of Panel </p-panel>
