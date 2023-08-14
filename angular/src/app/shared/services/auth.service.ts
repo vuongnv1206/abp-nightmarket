@@ -37,4 +37,8 @@ export class AuthService {
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
   }
+
+  public navigateToLogin(): void{
+    
+  };
 }
