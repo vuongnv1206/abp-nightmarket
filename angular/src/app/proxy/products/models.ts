@@ -1,5 +1,6 @@
 import type { EntityDto } from '@abp/ng.core';
 import type { ProductType } from '../night-market/products/product-type.enum';
+import type { BaseListFilterDto } from '../commons/models';
 
 export interface CreateUpdateProductDto extends EntityDto<string> {
   manufacturerId?: string;
@@ -46,4 +47,8 @@ export interface ProductInListDto extends EntityDto<string> {
   categoryId?: string;
   description?: string;
   thumbnailPicture?: string;
+}
+
+export interface ProductListFilterDto extends BaseListFilterDto {
+  categoryId?: string;
 }

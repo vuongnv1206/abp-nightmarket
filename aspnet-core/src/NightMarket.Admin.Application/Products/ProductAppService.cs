@@ -43,10 +43,12 @@ namespace NightMarket.Admin.Products
             return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
         }
 
-        public async Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
+        public async Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(ProductListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.KeyWord), x => x.Name.Contains(input.KeyWord));
+            query = query.WhereIf(input.CategoryId.HasValue, x => x.CategoryId == input.CategoryId);
+
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
 

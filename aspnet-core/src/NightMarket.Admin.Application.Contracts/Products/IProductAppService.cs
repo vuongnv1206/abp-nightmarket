@@ -14,7 +14,7 @@ namespace NightMarket.Admin.Products
             PagedAndSortedResultRequestDto,
             CreateUpdateProductDto>
     {
-        Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(BaseListFilterDto input);
+        Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(ProductListFilterDto input);
 
 
         Task<List<ProductInListDto>> GetListAllAsync();
