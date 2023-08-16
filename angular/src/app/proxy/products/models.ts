@@ -32,6 +32,7 @@ export interface ProductDto extends EntityDto<string> {
   seoMetaDescription?: string;
   description?: string;
   thumbnailPicture?: string;
+  sellPrice: number;
 }
 
 export interface ProductInListDto extends EntityDto<string> {

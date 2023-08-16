@@ -65,7 +65,6 @@ export class LoginComponent implements OnDestroy {
         .login(request)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(res => {
-          console.log(res);
           localStorage.setItem(ACCESS_TOKEN, res.access_token);
           localStorage.setItem(REFRESH_TOKEN, res.refresh_token);
           this.router.navigate(['']);

@@ -3,7 +3,7 @@
 
   <div class="grid">
     <div class="col-4">
-      <p-button label="Add new" icon="pi pi-plus" iconPos="left"></p-button>
+      <p-button label="Add new" (click)="showAddModal()" icon="pi pi-plus" iconPos="left"></p-button>
     </div>
     <div class="col-8">
       <div class="formgroup-inline">
@@ -86,13 +86,8 @@
   <p-blockUI [target]="panel" [blocked]="blockedPanel">
     <i class="pi pi-lock" style="font-size: 3rem"></i>
 
-    <p-progressSpinner
-      styleClass="w-4rem h-4rem"
-      strokeWidth="8"
-      fill="var(--surface-ground)"
-      animationDuration="1s"
-    ></p-progressSpinner>
+    <div class="spinner"></div>
+
   </p-blockUI>
 
-  <p-panel #pnl header="Panel Header"> Content of Panel </p-panel>
 </p-panel>

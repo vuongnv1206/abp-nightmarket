@@ -21,7 +21,7 @@ namespace NightMarket.Admin.Products
         public string SeoMetaDescription { get; set; }
         public string Description { get; set; }
         public string ThumbnailPicture { get; set; }
-        //public double SellPrice { get; set; }
+        public double SellPrice { get; set; }
         //public string CategoryName { get; set; }
         //public string CategorySlug { get; set; }
     }

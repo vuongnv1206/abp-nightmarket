@@ -3,9 +3,12 @@ import { PagedResultDto } from '@abp/ng.core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
-import { ProductInListDto, ProductService } from '@proxy/products';
+import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { NotificationService } from '../shared/services/notification.service';
 
 @Component({
   selector: 'app-product',
@@ -32,7 +35,9 @@ export class ProductComponent implements OnInit ,OnDestroy{
   constructor(private authService: AuthService,
     private oAuthService: OAuthService,
     private productService : ProductService,
-    private productCategoryService: ProductCategoryService
+    private productCategoryService: ProductCategoryService,
+    private dialogService: DialogService,
+    private notificationService: NotificationService
 
     ) {}
 
@@ -96,6 +101,20 @@ export class ProductComponent implements OnInit ,OnDestroy{
     this.skipCount = (event.page -1) * this.maxResultCount;
     this.maxResultCount = event.rows;
     this.loadData();
+  }
+
+  public showAddModal(){
+    const ref = this.dialogService.open(ProductDetailComponent,{
+      header: 'Add Product',
+      width: '70%',
+    })
+
+    ref.onClose.subscribe((data : ProductDto) => {
+      if (data){
+        this.loadData();
+        this.notificationService.showSuccess("Add new product successfully");
+      }
+    });
   }
 
   private toggleBlockUI(enable:boolean) {
