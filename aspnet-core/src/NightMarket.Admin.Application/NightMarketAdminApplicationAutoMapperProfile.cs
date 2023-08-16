@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using NightMarket.Admin.Manufacturers;
 using NightMarket.Admin.ProductCategories;
 using NightMarket.Admin.Products;
+using NightMarket.Manufacturers;
 using NightMarket.ProductCategories;
 using NightMarket.Products;
 
@@ -24,6 +26,11 @@ public class NightMarketAdminApplicationAutoMapperProfile : Profile
         CreateMap<Product, ProductDto>();
         CreateMap<Product, ProductInListDto>();
         CreateMap<Product, CreateUpdateProductDto>();
+
+        //Manufacturer
+        CreateMap<Manufacturer, ManufacturerDto>();
+        CreateMap<Manufacturer, ManufacturerInListDto>();
+        CreateMap<Manufacturer, CreateUpdateManufacturerDto>();
 
     }
 }

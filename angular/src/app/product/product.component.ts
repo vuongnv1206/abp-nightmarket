@@ -90,7 +90,7 @@ export class ProductComponent implements OnInit ,OnDestroy{
     .subscribe((response : ProductCategoryInListDto[]) => {
       response.forEach(category =>{
         this.productCategories.push({
-          name: category.name,
+          label: category.name,
           value: category.id,
         });
       });

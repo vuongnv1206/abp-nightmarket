@@ -2,10 +2,14 @@ import { PagedResultDto } from '@abp/ng.core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ManufacturerInListDto, ManufacturerService } from '@proxy/manufacturers';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { UtilityService } from 'src/app/shared/services/utility.service';
+import { productTypeOptions } from '@proxy/night-market/products';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,7 +25,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   productCategories: any[] = [];
   selectedEntity ={} as ProductDto;
   manufacturers:any[] = [];
-  categories: any[] = [];
   productTypes: any[] = [];
 
   public form: FormGroup;
@@ -32,7 +35,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private oAuthService: OAuthService,
     private productService: ProductService,
     private productCategoryService: ProductCategoryService,
-    private fb: FormBuilder
+    private manufacturerService: ManufacturerService,
+    private fb: FormBuilder,
+    private config:DynamicDialogConfig,
+    private ref:DynamicDialogRef,
+    private utilityService: UtilityService
   ) {}
 
 
@@ -72,6 +79,54 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadProductTypes();
+    this.initFormData();
+  }
+
+  initFormData() {
+    //Load data to form
+    var productCategories = this.productCategoryService.getListAll();
+    var manufacturers = this.manufacturerService.getListAll();
+    this.toggleBlockUI(true);
+    forkJoin({
+      productCategories,
+      manufacturers,
+    })
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: any) => {
+          //Push data to dropdown
+          var productCategories = response.productCategories as ProductCategoryInListDto[];
+          var manufacturers = response.manufacturers as ManufacturerInListDto[];
+          productCategories.forEach(element => {
+            this.productCategories.push({
+              value: element.id,
+              label: element.name,
+            });
+          });
+
+          manufacturers.forEach(element => {
+            this.manufacturers.push({
+              value: element.id,
+              label: element.name,
+            });
+          });
+          //Load edit data to form
+          if (this.utilityService.isEmpty(this.config.data?.id) == true) {
+
+            this.toggleBlockUI(false);
+          } else {
+            this.loadFormDetails(this.config.data?.id);
+          }
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+        },
+      });
+  }
+
+  generateSlug() {
+    this.form.controls['slug'].setValue(this.utilityService.MakeSeoTitle(this.form.get('name').value));
   }
 
   loadFormDetails(id: string) {
@@ -91,14 +146,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadProductCategories() {
-    this.productCategoryService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
-      response.forEach(category => {
-        this.productCategories.push({
-          name: category.name,
-          value: category.id,
+  loadProductTypes() {
+      productTypeOptions.forEach((productType) => {
+        this.productTypes.push({
+          label: productType.key,
+          value: productType.value,
         });
-      });
     });
   }
 
@@ -118,7 +171,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       sortOrder: new FormControl(this.selectedEntity.sortOrder || null, Validators.required),
       visibility: new FormControl(this.selectedEntity.visibility || true),
       isActive: new FormControl(this.selectedEntity.isActive || true),
-      desciption: new FormControl(this.selectedEntity.description || null),
+      description: new FormControl(this.selectedEntity.description || null),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
       thumbnailPicture: new FormControl(this.selectedEntity.thumbnailPicture || null, Validators.required),
 

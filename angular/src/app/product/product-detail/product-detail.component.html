@@ -1,11 +1,11 @@
-<form formGroup="form" skipValidation="" (ngSubmit)="saveChange()">
+<form [formGroup]="form" skipValidation="" (ngSubmit)="saveChange()">
   <p-panel #panel header="Product Detail">
     <!-- Form grid -->
     <div class="formgrid grid">
       <!-- Name -->
       <div class="field col-12">
         <label for="name" class="block">Name<span class="required">*</span></label>
-        <input id="name" pInputText type="text" class="w-full" formControlName="name" />
+        <input id="name" pInputText (keyup)="generateSlug()" type="text" class="w-full" formControlName="name" />
         <!-- Validation Name -->
         <app-validation-message
           [entityForm]="form"
@@ -66,7 +66,7 @@
       <div class="field col-12">
         <label for="category" class="block">Category<span class="required">*</span></label>
         <p-dropdown
-          [options]="categories"
+          [options]="productCategories"
           formControlName="categoryId"
           placeholder="Select a category"
           [showClear]="true"
