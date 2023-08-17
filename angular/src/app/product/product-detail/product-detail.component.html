@@ -1,11 +1,18 @@
-<form [formGroup]="form" skipValidation="" (ngSubmit)="saveChange()">
-  <p-panel #panel header="Product Detail">
+<form [formGroup]="form" (ngSubmit)="saveChange()" skipValidation>
+  <p-panel #panel header="Product">
     <!-- Form grid -->
     <div class="formgrid grid">
       <!-- Name -->
       <div class="field col-12">
         <label for="name" class="block">Name<span class="required">*</span></label>
-        <input id="name" pInputText (keyup)="generateSlug()" type="text" class="w-full" formControlName="name" />
+        <input
+          id="name"
+          pInputText
+          (keyup)="generateSlug()"
+          type="text"
+          class="w-full"
+          formControlName="name"
+        />
         <!-- Validation Name -->
         <app-validation-message
           [entityForm]="form"
@@ -47,13 +54,15 @@
       <div class="field col-12">
         <label for="manufacturer" class="block">Manufacturer<span class="required">*</span></label>
         <p-dropdown
+        inputId="manufacturer"
           [options]="manufacturers"
           formControlName="manufacturerId"
           placeholder="Select a manufacturer"
           [showClear]="true"
           [filter]="true"
-          filterBy="manufacturerName"
-          [editable]="true"
+          filterBy=""
+          autoWidth="false"
+          [style]="{ width: '100%' }"
         ></p-dropdown>
         <!-- Validation Manufacturer -->
         <app-validation-message
@@ -66,13 +75,15 @@
       <div class="field col-12">
         <label for="category" class="block">Category<span class="required">*</span></label>
         <p-dropdown
+          inputId="category"
           [options]="productCategories"
           formControlName="categoryId"
           placeholder="Select a category"
           [showClear]="true"
           [filter]="true"
-          filterBy="manufacturerName"
-          [editable]="true"
+          filterBy=""
+          autoWidth="false"
+          [style]="{ width: '100%' }"
         ></p-dropdown>
         <!-- Validation Category -->
         <app-validation-message
@@ -85,13 +96,13 @@
       <div class="field col-12">
         <label for="productTypes" class="block">Product Type<span class="required">*</span></label>
         <p-dropdown
+          inputId="productTypes"
           [options]="productTypes"
           formControlName="productType"
           placeholder="Select a productType"
           [showClear]="true"
-          [filter]="true"
-          filterBy="manufacturerName"
-          [editable]="true"
+          autoWidth="false"
+          [style]="{ width: '100%' }"
         ></p-dropdown>
         <!-- Validation ProductType -->
         <app-validation-message
@@ -114,7 +125,7 @@
       <!-- Price -->
       <div class="field col-12">
         <label for="sellPrice" class="block">Price<span class="required">*</span></label>
-        <p-inputNumber id="sellPrice" formControlName="sellPrice"></p-inputNumber>
+        <p-inputNumber inputId="sellPrice" formControlName="sellPrice"></p-inputNumber>
         <!-- Validation Price -->
         <app-validation-message
           [entityForm]="form"
@@ -124,13 +135,23 @@
       </div>
       <!-- Visibility -->
       <div class="field-checkbox col-12 md:col-3">
-        <p-checkbox formControlName="visibility" id="visibility" binary="true"></p-checkbox>
+        <p-checkbox formControlName="visibility" inputId="visibility" [binary]="true"></p-checkbox>
         <label for="visibility">Visibility</label>
       </div>
       <!-- Is Active -->
       <div class="field-checkbox col-12 md:col-3">
-        <p-checkbox formControlName="isActive" id="isActive" binary="true"></p-checkbox>
+        <p-checkbox formControlName="isActive" inputId="isActive" [binary]="true"></p-checkbox>
         <label for="isActive">Is Active</label>
+      </div>
+       <!-- Meta desc -->
+       <div class="field col-12">
+        <label for="seoMetaDescription" class="block">Seo Meta Description</label>
+        <textarea
+          id="seoMetaDescription"
+          pInputTextarea
+          class="w-full"
+          formControlName="seoMetaDescription"
+        ></textarea>
       </div>
       <!-- Description -->
       <div class="field col-12">
@@ -141,26 +162,16 @@
           [style]="{ height: '320px' }"
         ></p-editor>
       </div>
-      <!-- Meta desc -->
-      <div class="field col-12">
-        <label for="seoMetaDescription" class="block">Seo Meta Description</label>
-        <textarea
-          id="seoMetaDescription"
-          pInputTextarea
-          class="w-full"
-          formControlName="seoMetaDescription"
-        ></textarea>
-      </div>
     </div>
-
+    <!-- [disabled]="!form.valid || btnDisabled" -->
     <ng-template pTemplate="footer">
-      <button
-        label="Save"
-        [disabled]="!form.valid || btnDisabled"
-        pButton
-        icon="fa fa-save"
+      <p-button
         type="submit"
-      ></button>
+
+        icon="fa fa-save"
+        iconPos="left"
+        label="Save"
+      ></p-button>
     </ng-template>
     <!-- Block UI -->
 

@@ -3,18 +3,31 @@
 
   <div class="grid">
     <div class="col-4">
-      <p-button label="Add new" (click)="showAddModal()" icon="pi pi-plus" iconPos="left"></p-button>
+      <p-button
+        label="Add new"
+        (click)="showAddModal()"
+        icon="pi pi-plus"
+        iconPos="left"
+      ></p-button>
+      <p-button
+        label="Update"
+        (click)="showEditModal()"
+        *ngIf="selectedItems.length === 1"
+        class="ml-1 p-button-help"
+        icon="fa fa-minus"
+        iconPos="left"
+      ></p-button>
     </div>
     <div class="col-8">
       <div class="formgroup-inline">
         <div class="field">
-          <label for="txt-keyword" class="p-sr-only">Keyword</label>
-          <input id="txt-keyword" pInputText type="text" placeholder="Enter keyword" />
+          <label for="txt-keyword" class="p-sr-only">Từ khóa</label>
+          <input id="txt-keyword"[(ngModel)]="keyWord" pInputText type="text" placeholder="Gõ từ khóa" />
         </div>
         <div class="field">
           <p-dropdown
             [options]="productCategories"
-            [ngModel]="categoryId"
+            [(ngModel)]="categoryId"
             placeholder="Select category"
           ></p-dropdown>
         </div>
@@ -23,7 +36,7 @@
           pButton
           icon="fa fa-search"
           type="button"
-          (click)="loadProductCategories()"
+          (click)="loadData()"
         ></button>
       </div>
     </div>
@@ -31,33 +44,50 @@
 
   <!-- Table -->
 
-  <p-table #panel [value]="products" [tableStyle]="{ 'min-width': '60rem' }">
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        Products
-        <p-button icon="pi pi-refresh"></p-button>
-      </div>
-    </ng-template>
+  <p-table
+    #panel
+    [value]="items"
+    [(selection)]="selectedItems"
+    selectionMode="multiple"
+    [tableStyle]="{ 'min-width': '60rem' }"
+  >
     <ng-template pTemplate="header">
       <tr>
+        <th style="width: 10px">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
         <th>Code</th>
         <th>SKU</th>
         <th>Name</th>
         <th>Category</th>
-        <th>Order</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Sort Order</th>
         <th>Visible</th>
         <th>Active</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-product>
-      <tr>
-        <td>{{ product.code }}</td>
-        <td>{{ product.sku }}</td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.productType }}</td>
-        <td>{{ product.sortOrder }}</td>
-        <td>{{ product.visibility }}</td>
-        <td>{{ product.isActive }}</td>
+    <ng-template pTemplate="body" let-item>
+      <tr [pSelectableRow]="item">
+        <td style="width: 10px">
+          <span class="ui-column-title"></span>
+          <p-tableCheckbox [value]="item"></p-tableCheckbox>
+        </td>
+        <td>{{ item.code }}</td>
+        <td>{{ item.sku }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.categoryId }}</td>
+        <td>{{ getProductTypeName(item.productType) }}</td>
+        <td>{{ item.sellPrice }}</td>
+        <td>{{ item.sortOrder }}</td>
+        <td>
+          <p-tag  *ngIf="item.visibility === true" severity="success" value="Visibility"></p-tag>
+          <p-tag  *ngIf="item.visibility === false" severity="danger" value="Hide"></p-tag>
+        </td>
+        <td>
+          <p-tag  *ngIf="item.isActive === true" value="Active" severity="success"></p-tag>
+          <p-tag  *ngIf="item.isActive === false" value="Lock" severity="danger"></p-tag>
+        </td>
         <!-- <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="100" class="shadow-4" /></td> -->
         <!-- <td>{{product.price | currency:'USD'}}</td> -->
 
@@ -67,7 +97,7 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div class="flex align-items-center justify-content-between">
-        In total there are {{ products ? products.length : 0 }} products.
+        In total there are {{ totalCount | number }} products.
       </div>
     </ng-template>
   </p-table>
@@ -80,14 +110,11 @@
     [rowsPerPageOptions]="[10, 20, 30, 50, 100]"
   ></p-paginator>
 
-  <!-- <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120" [rowsPerPageOptions]="[10, 20, 30,50]"></p-paginator> -->
   <!-- Block UI -->
 
   <p-blockUI [target]="panel" [blocked]="blockedPanel">
     <i class="pi pi-lock" style="font-size: 3rem"></i>
 
     <div class="spinner"></div>
-
   </p-blockUI>
-
 </p-panel>

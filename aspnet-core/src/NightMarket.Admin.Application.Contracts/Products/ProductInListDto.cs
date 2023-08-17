@@ -20,8 +20,8 @@ namespace NightMarket.Admin.Products
         public Guid CategoryId { get; set; }
         public string Description { get; set; }
         public string ThumbnailPicture { get; set; }
-        //public double SellPrice { get; set; }
-        //public string CategoryName { get; set; }
-        //public string CategorySlug { get; set; }
+        public double SellPrice { get; set; }
+        public string CategoryName { get; set; }
+        public string CategorySlug { get; set; }
     }
 }

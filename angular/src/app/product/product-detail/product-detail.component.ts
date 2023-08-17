@@ -17,9 +17,10 @@ import { productTypeOptions } from '@proxy/night-market/products';
   styleUrls: ['./product-detail.component.scss'],
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
+
   private ngUnsubscribe = new Subject<void>();
   blockedPanel: boolean = false;
-  btnDisabled:boolean = false;
+  btnDisabled = false;
 
   //Dropdowm
   productCategories: any[] = [];
@@ -44,25 +45,19 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
 
   validationMessages = {
-    code:[{
-      type:'required',
-      message:'You must enter unique code'
-    }],
-    name:[
-      { type:'required',message:'Field name is required' },
-      { type: 'maxlength', message: 'You must not enter more than 250 characters' },
+    code: [{ type: 'required', message: 'Bạn phải nhập mã duy nhất' }],
+    name: [
+      { type: 'required', message: 'Bạn phải nhập tên' },
+      { type: 'maxlength', message: 'Bạn không được nhập quá 255 kí tự' },
     ],
-    slug:[
-      {type:'required',message:'Field slug is required'}
-    ],
-    sku:[{type:'required',message:'Field slug is required and unique'}],
-    manufacturerId:[{type:'required',message:'Manufacturer is required'}],
-    categoryId:[{type:'required',message:'Manufacturer is required'}],
-    productType:[{type:'required',message:'ProductType is required'}],
-    sortOrder:[{type:'required',message:'SortOrder is required'}],
-    sellPrice:[{type:'required',message:'SellPrice is required'}],
-
-  }
+    slug: [{ type: 'required', message: 'Bạn phải URL duy nhất' }],
+    sku: [{ type: 'required', message: 'Bạn phải mã SKU sản phẩm' }],
+    manufacturerId: [{ type: 'required', message: 'Bạn phải chọn nhà cung cấp' }],
+    categoryId: [{ type: 'required', message: 'Bạn phải chọn danh mục' }],
+    productType: [{ type: 'required', message: 'Bạn phải chọn loại sản phẩm' }],
+    sortOrder: [{ type: 'required', message: 'Bạn phải nhập thứ tự' }],
+    sellPrice: [{ type: 'required', message: 'Bạn phải nhập giá bán' }],
+  };
 
   get hasLoggedIn(): boolean {
     return this.oAuthService.hasValidAccessToken();
@@ -169,17 +164,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       categoryId: new FormControl(this.selectedEntity.categoryId || null, Validators.required),
       sellPrice: new FormControl(this.selectedEntity.sellPrice || null, Validators.required),
       sortOrder: new FormControl(this.selectedEntity.sortOrder || null, Validators.required),
-      visibility: new FormControl(this.selectedEntity.visibility || true),
-      isActive: new FormControl(this.selectedEntity.isActive || true),
+      visibility: new FormControl(this.selectedEntity.visibility),
+      isActive: new FormControl(this.selectedEntity.isActive),
       description: new FormControl(this.selectedEntity.description || null),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
-      thumbnailPicture: new FormControl(this.selectedEntity.thumbnailPicture || null, Validators.required),
-
+      thumbnailPicture: new FormControl(this.selectedEntity.thumbnailPicture || null),
     });
   }
 
-  private toggleBlockUI(enable: boolean) {
-    if (enable == true) {
+  private toggleBlockUI(enabled: boolean) {
+    if (enabled == true) {
       this.blockedPanel = true;
       this.btnDisabled = true;
     } else {
@@ -190,5 +184,32 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-   saveChange() {}
+   saveChange() {
+    this.toggleBlockUI(true);
+    if(this.utilityService.isEmpty(this.config.data?.id) == true) {
+      this.productService.create(this.form.value)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: () => {
+          this.ref.close(this.form.value);
+          this.toggleBlockUI(false);
+        },
+        error:() =>{
+          this.toggleBlockUI(false);
+        }
+      });
+    }else{
+      this.productService.update(this.config.data?.id,this.form.value)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: () => {
+          this.toggleBlockUI(false);
+          this.ref.close(this.form.value);
+        },
+        error:() =>{
+          this.toggleBlockUI(false);
+        }
+      });
+    }
+}
 }

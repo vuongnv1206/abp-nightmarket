@@ -18,8 +18,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
 import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
-
-
+import { BadgeModule } from 'primeng/badge';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule,
@@ -36,8 +36,9 @@ import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.mo
     CheckboxModule,
     InputTextareaModule,
     EditorModule,
-    NightMarketSharedModule
-
+    NightMarketSharedModule,
+    BadgeModule,
+    TagModule
   ],
 
 
