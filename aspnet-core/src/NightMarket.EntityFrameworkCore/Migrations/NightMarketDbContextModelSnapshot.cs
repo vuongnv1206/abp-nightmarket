@@ -178,11 +178,9 @@ namespace NightMarket.Migrations
                         .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoverPicture")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -363,7 +361,6 @@ namespace NightMarket.Migrations
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("OrderId")
@@ -427,10 +424,9 @@ namespace NightMarket.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SortOrder")
+                    b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<bool>("Visibility")
@@ -459,7 +455,6 @@ namespace NightMarket.Migrations
                         .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("CoverPicture")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -487,7 +482,6 @@ namespace NightMarket.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SeoMetaDescription")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -497,7 +491,7 @@ namespace NightMarket.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("SortOrder")
+                    b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<bool>("Visibility")
@@ -517,12 +511,10 @@ namespace NightMarket.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("CategorySlug")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -547,7 +539,6 @@ namespace NightMarket.Migrations
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExtraProperties")
@@ -586,7 +577,6 @@ namespace NightMarket.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("SeoMetaDescription")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -596,11 +586,10 @@ namespace NightMarket.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("SortOrder")
+                    b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<string>("ThumbnailPicture")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 

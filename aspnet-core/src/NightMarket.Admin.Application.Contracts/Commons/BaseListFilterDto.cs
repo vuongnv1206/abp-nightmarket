@@ -7,6 +7,6 @@ namespace NightMarket.Admin.Commons
 {
     public class BaseListFilterDto : PagedResultRequestDto
     {
-        public string KeyWord { get; set; }
+        public string? KeyWord { get; set; }
     }
 }

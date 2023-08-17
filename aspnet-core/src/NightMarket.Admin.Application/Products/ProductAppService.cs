@@ -26,7 +26,9 @@ namespace NightMarket.Admin.Products
         {
         }
 
-        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+		
+
+		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();

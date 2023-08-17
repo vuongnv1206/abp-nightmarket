@@ -10,8 +10,18 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditorModule } from 'primeng/editor';
+import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
+import { BadgeModule } from 'primeng/badge';
+import { TagModule } from 'primeng/tag';
 @NgModule({
-  declarations: [ProductComponent],
+  declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule,
     PanelModule,
     TableModule,
@@ -20,8 +30,17 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ButtonModule,
     DropdownModule,
     InputTextModule,
-    ProgressSpinnerModule
-
+    ProgressSpinnerModule,
+    DynamicDialogModule,
+    InputNumberModule,
+    CheckboxModule,
+    InputTextareaModule,
+    EditorModule,
+    NightMarketSharedModule,
+    BadgeModule,
+    TagModule
   ],
+
+
 })
 export class ProductModule {}

@@ -1,3 +1,10 @@
+/* Utils */
+.clearfix:after {
+  content: " ";
+  display: block;
+  clear: both;
+}
+
 .card {
     background: var(--surface-card);
     border: 1px solid var(--surface-border);
@@ -17,4 +24,9 @@
     &.p-toast-top-center {
         top: 100px;
     }
+}
+
+.required{
+  color: var(--red-500);
+  font-weight: bold;
 }

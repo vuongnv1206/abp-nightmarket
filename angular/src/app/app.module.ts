@@ -17,6 +17,10 @@ import { APP_ROUTE_PROVIDER } from './route.provider';
 import { FeatureManagementModule } from '@abp/ng.feature-management';
 import { AbpOAuthModule } from '@abp/ng.oauth';
 import { AppLayoutModule } from './layout/app.layout.module';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { NotificationService } from './shared/services/notification.service';
+import { UtilityService } from './shared/services/utility.service';
 
 
 
@@ -31,17 +35,17 @@ import { AppLayoutModule } from './layout/app.layout.module';
       registerLocaleFn: registerLocale(),
     }),
     AbpOAuthModule.forRoot(),
-    //ThemeSharedModule.forRoot(),
+    ThemeSharedModule.forRoot(),
     AccountConfigModule.forRoot(),
     IdentityConfigModule.forRoot(),
     TenantManagementConfigModule.forRoot(),
     SettingManagementConfigModule.forRoot(),
-    // ThemeLeptonXModule.forRoot(),
-    // SideMenuLayoutModule.forRoot(),
-    // FeatureManagementModule.forRoot(),
+     ThemeLeptonXModule.forRoot(),
+     SideMenuLayoutModule.forRoot(),
+     FeatureManagementModule.forRoot(),
   ],
   declarations: [AppComponent],
-  providers: [APP_ROUTE_PROVIDER],
+  providers: [APP_ROUTE_PROVIDER,DialogService,MessageService,NotificationService,UtilityService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
