@@ -10,6 +10,7 @@ import { ManufacturerInListDto, ManufacturerService } from '@proxy/manufacturers
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UtilityService } from 'src/app/shared/services/utility.service';
 import { productTypeOptions } from '@proxy/night-market/products';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -40,7 +41,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private config:DynamicDialogConfig,
     private ref:DynamicDialogRef,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
+    private notificationService : NotificationService
   ) {}
 
 
@@ -114,7 +116,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             this.loadFormDetails(this.config.data?.id);
           }
         },
-        error: () => {
+        error: (err) => {
+          this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         },
       });
@@ -135,7 +138,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.buildForm();
           this.toggleBlockUI(false);
         },
-        error: () => {
+        error: (err) => {
+          this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         },
       });
@@ -194,7 +198,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.ref.close(this.form.value);
           this.toggleBlockUI(false);
         },
-        error:() =>{
+        error:(err) =>{
+          this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         }
       });
@@ -206,7 +211,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.toggleBlockUI(false);
           this.ref.close(this.form.value);
         },
-        error:() =>{
+        error:(err) =>{
+          this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         }
       });

@@ -1,15 +1,48 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NightMarket.Products
 {
     public class Product : AuditedAggregateRoot<Guid>
     {
-        public Guid ManufacturerId { get; set; }
+		public Product()
+		{
+
+		}
+		public Product(Guid id,Guid manufacturerId,
+			string name, string code, string slug,
+			ProductType productType, string sKU, int? sortOrder,
+			bool visibility, bool isActive, Guid categoryId,
+			string? seoMetaDescription, string? description,
+			string? thumbnailPicture, double sellPrice,
+			string? categoryName, string? categorySlug)
+		{	
+			Id = id;
+			ManufacturerId = manufacturerId;
+			Name = name;
+			Code = code;
+			Slug = slug;
+			ProductType = productType;
+			SKU = sKU;
+			SortOrder = sortOrder;
+			Visibility = visibility;
+			IsActive = isActive;
+			CategoryId = categoryId;
+			SeoMetaDescription = seoMetaDescription;
+			Description = description;
+			ThumbnailPicture = thumbnailPicture;
+			SellPrice = sellPrice;
+			CategoryName = categoryName;
+			CategorySlug = categorySlug;
+		}
+
+		public Guid ManufacturerId { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string Slug { get; set; }
@@ -26,5 +59,18 @@ namespace NightMarket.Products
         public string? CategoryName { get; set; }
         public string? CategorySlug { get; set; }
 
-    }
+		internal Product ChangeName([NotNull] string name)
+		{
+			SetName(name);
+			return this;
+		}
+
+		private void SetName([NotNull] string name)
+		{
+			Name = Check.NotNullOrWhiteSpace(name, nameof(name), maxLength: 250);
+		}
+
+
+
+	}
 }
