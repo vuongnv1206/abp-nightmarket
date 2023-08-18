@@ -16,6 +16,7 @@ export interface CreateUpdateProductDto extends EntityDto<string> {
   seoMetaDescription?: string;
   description?: string;
   thumbnailPicture?: string;
+  sellPrice: number;
 }
 
 export interface ProductDto extends EntityDto<string> {
@@ -33,6 +34,8 @@ export interface ProductDto extends EntityDto<string> {
   description?: string;
   thumbnailPicture?: string;
   sellPrice: number;
+  categoryName?: string;
+  categorySlug?: string;
 }
 
 export interface ProductInListDto extends EntityDto<string> {
@@ -49,6 +52,8 @@ export interface ProductInListDto extends EntityDto<string> {
   description?: string;
   thumbnailPicture?: string;
   sellPrice: number;
+  categoryName?: string;
+  categorySlug?: string;
 }
 
 export interface ProductListFilterDto extends BaseListFilterDto {
