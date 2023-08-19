@@ -1,5 +1,7 @@
 ﻿using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -17,7 +19,8 @@ namespace NightMarket.Admin;
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpTenantManagementApplicationModule),
     typeof(AbpFeatureManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(AbpBlobStoringFileSystemModule)
     )]
 public class NightMarketAdminApplicationModule : AbpModule
 {
@@ -27,5 +30,19 @@ public class NightMarketAdminApplicationModule : AbpModule
         {
             options.AddMaps<NightMarketAdminApplicationModule>();
         });
-    }
+
+		//Blob storage
+		Configure<AbpBlobStoringOptions>(options =>
+		{
+			options.Containers.Configure("product-thumbnail-pictures", container =>
+			{
+                //TODO...
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = "D:\\nightmarket";
+                });
+			});
+		});
+
+	}
 }

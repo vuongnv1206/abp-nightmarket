@@ -50,7 +50,7 @@ namespace NightMarket.Admin.Manufacturers
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
 
-            var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(x => x.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount));
 
             return new PagedResultDto<ManufacturerInListDto>()
             {
