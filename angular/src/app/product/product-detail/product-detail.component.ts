@@ -1,6 +1,6 @@
 import { PagedResultDto } from '@abp/ng.core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
@@ -11,6 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UtilityService } from 'src/app/shared/services/utility.service';
 import { productTypeOptions } from '@proxy/night-market/products';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-detail',
@@ -18,18 +19,18 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
   styleUrls: ['./product-detail.component.scss'],
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
-
   private ngUnsubscribe = new Subject<void>();
   blockedPanel: boolean = false;
   btnDisabled = false;
 
   //Dropdowm
   productCategories: any[] = [];
-  selectedEntity ={} as ProductDto;
-  manufacturers:any[] = [];
+  selectedEntity = {} as ProductDto;
+  manufacturers: any[] = [];
   productTypes: any[] = [];
 
   public form: FormGroup;
+  public thumbnailImage;
 
   //Constructor
   constructor(
@@ -39,12 +40,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private productCategoryService: ProductCategoryService,
     private manufacturerService: ManufacturerService,
     private fb: FormBuilder,
-    private config:DynamicDialogConfig,
-    private ref:DynamicDialogRef,
+    private config: DynamicDialogConfig,
+    private ref: DynamicDialogRef,
     private utilityService: UtilityService,
-    private notificationService : NotificationService
+    private notificationService: NotificationService,
+    private cd: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
-
 
   validationMessages = {
     code: [{ type: 'required', message: 'Bạn phải nhập mã duy nhất' }],
@@ -70,6 +72,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.ref) {
+      this.ref.close();
+    }
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -110,13 +115,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           });
           //Load edit data to form
           if (this.utilityService.isEmpty(this.config.data?.id) == true) {
-
             this.toggleBlockUI(false);
           } else {
             this.loadFormDetails(this.config.data?.id);
           }
         },
-        error: (err) => {
+        error: err => {
           this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         },
@@ -124,7 +128,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   generateSlug() {
-    this.form.controls['slug'].setValue(this.utilityService.MakeSeoTitle(this.form.get('name').value));
+    this.form.controls['slug'].setValue(
+      this.utilityService.MakeSeoTitle(this.form.get('name').value)
+    );
   }
 
   loadFormDetails(id: string) {
@@ -135,10 +141,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: ProductDto) => {
           this.selectedEntity = response;
+          this.loadThumbnail(this.selectedEntity.thumbnailPicture);
           this.buildForm();
           this.toggleBlockUI(false);
         },
-        error: (err) => {
+        error: err => {
           this.notificationService.showError(err.error.error.message);
           this.toggleBlockUI(false);
         },
@@ -146,33 +153,37 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   loadProductTypes() {
-      productTypeOptions.forEach((productType) => {
-        this.productTypes.push({
-          label: productType.key,
-          value: productType.value,
-        });
+    productTypeOptions.forEach(productType => {
+      this.productTypes.push({
+        label: productType.key,
+        value: productType.value,
+      });
     });
   }
 
   private buildForm() {
     this.form = this.fb.group({
-      name: new FormControl(this.selectedEntity.name || null, Validators.compose([
-        Validators.required,
-        Validators.maxLength(250)
-      ])),
+      name: new FormControl(
+        this.selectedEntity.name || null,
+        Validators.compose([Validators.required, Validators.maxLength(250)])
+      ),
       code: new FormControl(this.selectedEntity.code || null, Validators.required),
       slug: new FormControl(this.selectedEntity.slug || null, Validators.required),
       sku: new FormControl(this.selectedEntity.sku || null, Validators.required),
       productType: new FormControl(this.selectedEntity.productType || null, Validators.required),
-      manufacturerId: new FormControl(this.selectedEntity.manufacturerId || null, Validators.required),
+      manufacturerId: new FormControl(
+        this.selectedEntity.manufacturerId || null,
+        Validators.required
+      ),
       categoryId: new FormControl(this.selectedEntity.categoryId || null, Validators.required),
       sellPrice: new FormControl(this.selectedEntity.sellPrice || null, Validators.required),
       sortOrder: new FormControl(this.selectedEntity.sortOrder || null, Validators.required),
-      visibility: new FormControl(this.selectedEntity.visibility),
-      isActive: new FormControl(this.selectedEntity.isActive),
+      visibility: new FormControl(this.selectedEntity.visibility || false),
+      isActive: new FormControl(this.selectedEntity.isActive ||false),
       description: new FormControl(this.selectedEntity.description || null),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
-      thumbnailPicture: new FormControl(this.selectedEntity.thumbnailPicture || null),
+      thumbnailPictureName: new FormControl(this.selectedEntity.thumbnailPicture || null),
+      thumbnailPictureContent: new FormControl(null)
     });
   }
 
@@ -188,34 +199,68 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-   saveChange() {
+  saveChange() {
     this.toggleBlockUI(true);
-    if(this.utilityService.isEmpty(this.config.data?.id) == true) {
-      this.productService.create(this.form.value)
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe({
-        next: () => {
-          this.ref.close(this.form.value);
-          this.toggleBlockUI(false);
-        },
-        error:(err) =>{
-          this.notificationService.showError(err.error.error.message);
-          this.toggleBlockUI(false);
-        }
-      });
-    }else{
-      this.productService.update(this.config.data?.id,this.form.value)
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe({
-        next: () => {
-          this.toggleBlockUI(false);
-          this.ref.close(this.form.value);
-        },
-        error:(err) =>{
-          this.notificationService.showError(err.error.error.message);
-          this.toggleBlockUI(false);
-        }
-      });
+    if (this.utilityService.isEmpty(this.config.data?.id) == true) {
+      this.productService
+        .create(this.form.value)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe({
+          next: () => {
+            this.ref.close(this.form.value);
+            this.toggleBlockUI(false);
+          },
+          error: err => {
+            this.notificationService.showError(err.error.error.message);
+            this.toggleBlockUI(false);
+          },
+        });
+    } else {
+      this.productService
+        .update(this.config.data?.id, this.form.value)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe({
+          next: () => {
+            this.toggleBlockUI(false);
+            this.ref.close(this.form.value);
+          },
+          error: err => {
+            this.notificationService.showError(err.error.error.message);
+            this.toggleBlockUI(false);
+          },
+        });
     }
-}
+  }
+
+  loadThumbnail(fileName: string) {
+    this.productService
+      .getThumbnailImage(fileName)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: string) => {
+          var fileExt = this.selectedEntity.thumbnailPicture?.split('.').pop();
+          this.thumbnailImage = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `data:image/${fileExt};base64, ${response}`
+          );
+        },
+      });
+  }
+
+  onFileChange(event) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.form.patchValue({
+          thumbnailPictureName: file.name,
+          thumbnailPictureContent: reader.result,
+        });
+
+        // need to run CD since file load runs outside of zone
+        this.cd.markForCheck();
+      };
+    }
+  }
 }

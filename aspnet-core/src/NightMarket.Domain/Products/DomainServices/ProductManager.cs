@@ -28,7 +28,7 @@ namespace NightMarket.Products.DomainServices
 			ProductType productType, string sKU, int? sortOrder,
 			bool visibility, bool isActive, Guid categoryId,
 			string? seoMetaDescription, string? description,
-			string? thumbnailPicture, double sellPrice)
+			double sellPrice)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
 
@@ -63,7 +63,7 @@ namespace NightMarket.Products.DomainServices
                 categoryId,
                 seoMetaDescription,
                 description,
-                thumbnailPicture,
+                null,
                 sellPrice,
                 category.Name,
                 category.Slug

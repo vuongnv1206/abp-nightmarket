@@ -20,6 +20,7 @@
           [validationMessages]="validationMessages"
         ></app-validation-message>
       </div>
+      <!-- Code -->
       <div class="field col-12">
         <label for="code" class="block">Code<span class="required">*</span></label>
         <input id="code" pInputText type="text" formControlName="code" />
@@ -30,6 +31,7 @@
           [validationMessages]="validationMessages"
         ></app-validation-message>
       </div>
+      <!-- Slug -->
       <div class="field col-12">
         <label for="slug" class="block">Slug<span class="required">*</span></label>
         <input id="slug" pInputText type="text" class="w-full" formControlName="slug" />
@@ -40,6 +42,7 @@
           [validationMessages]="validationMessages"
         ></app-validation-message>
       </div>
+      <!-- SKU -->
       <div class="field col-12">
         <label for="sku" class="block">SKU<span class="required">*</span></label>
         <input id="sku" pInputText type="text" class="w-full" formControlName="sku" />
@@ -54,7 +57,7 @@
       <div class="field col-12">
         <label for="manufacturer" class="block">Manufacturer<span class="required">*</span></label>
         <p-dropdown
-        inputId="manufacturer"
+          inputId="manufacturer"
           [options]="manufacturers"
           formControlName="manufacturerId"
           placeholder="Select a manufacturer"
@@ -133,6 +136,19 @@
           [validationMessages]="validationMessages"
         ></app-validation-message>
       </div>
+      <!-- Thumbnail -->
+      <div class="field col-12 md-col-6">
+        <label for="thumbnailImage" class="block">Image</label>
+        <input type="file" id="thumbnailImage" class="w-full" (change)="onFileChange($event)">
+      </div>
+      <div class="field col-12 md-col-6">
+          <p-image
+            [src]="thumbnailImage"
+            [alt]="selectedEntity.name"
+            width="250"
+            [preview]="true"
+          ></p-image>
+      </div>
       <!-- Visibility -->
       <div class="field-checkbox col-12 md:col-3">
         <p-checkbox formControlName="visibility" inputId="visibility" [binary]="true"></p-checkbox>
@@ -143,8 +159,8 @@
         <p-checkbox formControlName="isActive" inputId="isActive" [binary]="true"></p-checkbox>
         <label for="isActive">Is Active</label>
       </div>
-       <!-- Meta desc -->
-       <div class="field col-12">
+      <!-- Meta desc -->
+      <div class="field col-12">
         <label for="seoMetaDescription" class="block">Seo Meta Description</label>
         <textarea
           id="seoMetaDescription"
@@ -165,13 +181,7 @@
     </div>
     <!-- [disabled]="!form.valid || btnDisabled" -->
     <ng-template pTemplate="footer">
-      <p-button
-        type="submit"
-
-        icon="fa fa-save"
-        iconPos="left"
-        label="Save"
-      ></p-button>
+      <p-button type="submit" icon="fa fa-save" iconPos="left" label="Save"></p-button>
     </ng-template>
     <!-- Block UI -->
 

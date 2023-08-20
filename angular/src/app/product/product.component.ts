@@ -9,6 +9,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { NotificationService } from '../shared/services/notification.service';
 import { ProductType } from '@proxy/night-market/products';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-product',
@@ -36,7 +37,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private productCategoryService: ProductCategoryService,
     private dialogService: DialogService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private confirmmationService : ConfirmationService
   ) {}
 
   ngOnDestroy(): void {
@@ -136,5 +138,39 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.blockedPanel = false;
       }, 1000);
     }
+  }
+
+  deleteItems(){
+    if(this.selectedItems.length == 0){
+      this.notificationService.showError("Must be at least one item");
+      return;
+    }
+    var ids = [];
+    this.selectedItems.forEach(element => {
+      ids.push(element.id);
+    });
+    this.confirmmationService.confirm({
+      message: "Are you sure you want to delete this item",
+      accept:() => {
+        this.deleteItemsConfirmed(ids);
+      }
+    });
+  }
+
+  deleteItemsConfirmed(ids: string[]){
+    this.toggleBlockUI(true);
+    this.productService.deleteMultiple(ids)
+    .pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe({
+      next:() =>{
+        this.notificationService.showSuccess("Delete successfully completed");
+        this.loadData();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error:() =>{
+        this.toggleBlockUI(false);
+      },
+    });
   }
 }
