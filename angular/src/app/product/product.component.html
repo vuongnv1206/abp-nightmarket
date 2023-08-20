@@ -17,6 +17,14 @@
         icon="fa fa-minus"
         iconPos="left"
       ></p-button>
+      <p-button
+        label="Delete"
+        (click)="deleteItems()"
+        *ngIf="selectedItems.length > 0"
+        class="ml-1 p-button-danger"
+        icon="fa fa-minus"
+        iconPos="left"
+      ></p-button>
     </div>
     <div class="col-8">
       <div class="formgroup-inline">

@@ -20,6 +20,8 @@ import { EditorModule } from 'primeng/editor';
 import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
+import { ImageModule } from 'primeng/image';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule,
@@ -38,7 +40,9 @@ import { TagModule } from 'primeng/tag';
     EditorModule,
     NightMarketSharedModule,
     BadgeModule,
-    TagModule
+    TagModule,
+    ImageModule,
+    ConfirmDialogModule
   ],
 
 

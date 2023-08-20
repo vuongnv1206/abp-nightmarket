@@ -10,6 +10,9 @@ import { LOGIN_URL } from './shared/constants/url.const';
     <!-- <abp-loader-bar></abp-loader-bar> -->
     <!-- <abp-dynamic-layout></abp-dynamic-layout> -->
     <router-outlet></router-outlet>
+    <p-confirmDialog [style]="{ width: '50vw' }" header="Confirmation" rejectButtonStyleClass="p-button-outlined" acceptButtonStyleClass=""></p-confirmDialog>
+    <p-toast position="top-right"></p-toast>
+
   `,
 })
 export class AppComponent implements OnInit {
