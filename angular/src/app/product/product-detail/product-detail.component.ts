@@ -1,4 +1,4 @@
-import { PagedResultDto } from '@abp/ng.core';
+
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
