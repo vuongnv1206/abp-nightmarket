@@ -70,6 +70,15 @@ export class ProductService {
     { apiName: this.apiName,...config });
   
 
+  getSuggestNewCode = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, string>({
+      method: 'GET',
+      responseType: 'text',
+      url: '/api/app/product/suggest-new-code',
+    },
+    { apiName: this.apiName,...config });
+  
+
   getThumbnailImage = (fileName: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, string>({
       method: 'GET',

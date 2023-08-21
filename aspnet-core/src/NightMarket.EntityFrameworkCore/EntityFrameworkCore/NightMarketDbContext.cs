@@ -28,6 +28,8 @@ using NightMarket.Configurations.Orders;
 using NightMarket.Configurations.ProductCategories;
 using NightMarket.Configurations.Products;
 using NightMarket.Configurations.Promotions;
+using NightMarket.IdentitySettings;
+using NightMarket.Configurations.IdentitySettings;
 
 namespace NightMarket.EntityFrameworkCore;
 
@@ -92,6 +94,8 @@ public class NightMarketDbContext :
     public DbSet<PromotionManufacturer> PromotionManufacturers { get; set; }
     public DbSet<PromotionProduct> PromotionProducts { get; set; }
     public DbSet<PromotionUsageHistory> PromotionUsageHistories { get; set; }
+
+    public DbSet<IdentitySetting> IdentitySettings { get; set; }
     #endregion
 
     public NightMarketDbContext(DbContextOptions<NightMarketDbContext> options)
@@ -155,5 +159,7 @@ public class NightMarketDbContext :
         builder.ApplyConfiguration(new PromotionManufacturerConfiguration());
         builder.ApplyConfiguration(new PromotionProductConfiguration());
         builder.ApplyConfiguration(new PromotionUsageHistoryConfiguration());
+
+        builder.ApplyConfiguration(new IdentitySettingConfiguration());
     }
 }
