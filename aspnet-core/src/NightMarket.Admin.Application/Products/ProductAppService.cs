@@ -37,15 +37,19 @@ namespace NightMarket.Admin.Products
         //Blob storage
         private readonly IBlobContainer<ProductThumbnailPictureContainer> _blobContainer;
 
+        private readonly ProductCodeGenerator _productCodeGenerator;
+
 
 		public ProductAppService(IRepository<Product, Guid> repository,
             ProductManager productManager,
 			IRepository<ProductCategory, Guid> categoryRepository,
-			IBlobContainer<ProductThumbnailPictureContainer> blobContainer) : base(repository)
+			IBlobContainer<ProductThumbnailPictureContainer> blobContainer,
+			ProductCodeGenerator productCodeGenerator) : base(repository)
         {
             _productManager = productManager;
             _categoryRepository = categoryRepository;
             _blobContainer = blobContainer;
+            _productCodeGenerator = productCodeGenerator;
         }
 
 		public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
@@ -169,6 +173,11 @@ namespace NightMarket.Admin.Products
             }
             var result = Convert.ToBase64String(thumbnailContent);
             return result;
+		}
+
+		public async Task<string> GetSuggestNewCodeAsync()
+		{
+            return await _productCodeGenerator.GenerateAsync();
 		}
 	}
 }

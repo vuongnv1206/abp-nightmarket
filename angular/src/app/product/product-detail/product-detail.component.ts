@@ -115,7 +115,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           });
           //Load edit data to form
           if (this.utilityService.isEmpty(this.config.data?.id) == true) {
+            this.getNewSuggestCode();
             this.toggleBlockUI(false);
+
           } else {
             this.loadFormDetails(this.config.data?.id);
           }
@@ -131,6 +133,19 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.form.controls['slug'].setValue(
       this.utilityService.MakeSeoTitle(this.form.get('name').value)
     );
+  }
+
+  getNewSuggestCode(){
+    this.productService.getSuggestNewCode()
+    .pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe({
+      next: (response : string) => {
+        this.form.patchValue({
+          code: response
+        });
+      },
+
+    })
   }
 
   loadFormDetails(id: string) {
