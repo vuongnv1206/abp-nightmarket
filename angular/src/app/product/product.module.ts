@@ -22,6 +22,7 @@ import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule,
@@ -42,7 +43,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     BadgeModule,
     TagModule,
     ImageModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ToastModule,
   ],
 
 

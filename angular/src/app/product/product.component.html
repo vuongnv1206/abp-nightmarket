@@ -30,7 +30,13 @@
       <div class="formgroup-inline">
         <div class="field">
           <label for="txt-keyword" class="p-sr-only">Từ khóa</label>
-          <input id="txt-keyword"[(ngModel)]="keyWord" pInputText type="text" placeholder="Gõ từ khóa" />
+          <input
+            id="txt-keyword"
+            [(ngModel)]="keyWord"
+            pInputText
+            type="text"
+            placeholder="Gõ từ khóa"
+          />
         </div>
         <div class="field">
           <p-dropdown
@@ -89,12 +95,12 @@
         <td>{{ item.sellPrice }}</td>
         <td>{{ item.sortOrder }}</td>
         <td>
-          <p-tag  *ngIf="item.visibility === true" severity="success" value="Visibility"></p-tag>
-          <p-tag  *ngIf="item.visibility === false" severity="danger" value="Hide"></p-tag>
+          <p-tag *ngIf="item.visibility === true" severity="success" value="Visibility"></p-tag>
+          <p-tag *ngIf="item.visibility === false" severity="danger" value="Hide"></p-tag>
         </td>
         <td>
-          <p-tag  *ngIf="item.isActive === true" value="Active" severity="success"></p-tag>
-          <p-tag  *ngIf="item.isActive === false" value="Lock" severity="danger"></p-tag>
+          <p-tag *ngIf="item.isActive === true" value="Active" severity="success"></p-tag>
+          <p-tag *ngIf="item.isActive === false" value="Lock" severity="danger"></p-tag>
         </td>
         <!-- <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="100" class="shadow-4" /></td> -->
         <!-- <td>{{product.price | currency:'USD'}}</td> -->
@@ -121,8 +127,6 @@
   <!-- Block UI -->
 
   <p-blockUI [target]="panel" [blocked]="blockedPanel">
-    <i class="pi pi-lock" style="font-size: 3rem"></i>
-
-    <div class="spinner"></div>
+    <p-progressSpinner></p-progressSpinner>
   </p-blockUI>
 </p-panel>

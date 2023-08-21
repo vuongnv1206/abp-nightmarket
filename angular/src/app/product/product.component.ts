@@ -18,7 +18,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class ProductComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
-  blockedPanel: boolean = false;
+  blockedPanel = false;
   items: ProductInListDto[] = [];
   public selectedItems: ProductInListDto[] = [];
 
