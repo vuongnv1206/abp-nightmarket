@@ -16,7 +16,7 @@ namespace NightMarket.Admin.ProductCategories
             ProductCategory,
             ProductCategoryDto,
             Guid,
-            PagedAndSortedResultRequestDto,
+            PagedResultRequestDto,
             CreateUpdateProductCategoryDto>,
         IProductCategoryAppService
     {

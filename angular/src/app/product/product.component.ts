@@ -10,6 +10,8 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { NotificationService } from '../shared/services/notification.service';
 import { ProductType } from '@proxy/night-market/products';
 import { ConfirmationService } from 'primeng/api';
+import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product',
@@ -21,6 +23,9 @@ export class ProductComponent implements OnInit, OnDestroy {
   blockedPanel = false;
   items: ProductInListDto[] = [];
   public selectedItems: ProductInListDto[] = [];
+  public thumbnailImage;
+
+
 
   //Paging variables
   public maxResultCount: number = 10;
@@ -38,7 +43,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     private productCategoryService: ProductCategoryService,
     private dialogService: DialogService,
     private notificationService: NotificationService,
-    private confirmmationService : ConfirmationService
+    private confirmmationService: ConfirmationService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnDestroy(): void {
@@ -64,6 +70,10 @@ export class ProductComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: PagedResultDto<ProductInListDto>) => {
           this.items = response.items;
+          for (let item of this.items) {
+            this.loadThumbnail(item.thumbnailPicture, item);
+          }
+
           this.totalCount = response.totalCount;
           this.toggleBlockUI(false);
         },
@@ -130,6 +140,24 @@ export class ProductComponent implements OnInit, OnDestroy {
     });
   }
 
+  manageProductAttribute(id: string) {
+    const ref = this.dialogService.open(ProductAttributeComponent, {
+      data: {
+        id: id,
+      },
+      header: 'Quản lý thuộc tính sản phẩm',
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        this.loadData();
+        this.selectedItems = [];
+        this.notificationService.showSuccess('Cập nhật thuộc tính sản phẩm thành công');
+      }
+    });
+  }
+
   private toggleBlockUI(enabled: boolean) {
     if (enabled == true) {
       this.blockedPanel = true;
@@ -140,9 +168,9 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteItems(){
-    if(this.selectedItems.length == 0){
-      this.notificationService.showError("Must be at least one item");
+  deleteItems() {
+    if (this.selectedItems.length == 0) {
+      this.notificationService.showError('Must be at least one item');
       return;
     }
     var ids = [];
@@ -150,27 +178,47 @@ export class ProductComponent implements OnInit, OnDestroy {
       ids.push(element.id);
     });
     this.confirmmationService.confirm({
-      message: "Are you sure you want to delete this item",
-      accept:() => {
+      message: 'Are you sure you want to delete this item',
+      accept: () => {
         this.deleteItemsConfirmed(ids);
-      }
+      },
     });
   }
 
-  deleteItemsConfirmed(ids: string[]){
+  deleteItemsConfirmed(ids: string[]) {
     this.toggleBlockUI(true);
-    this.productService.deleteMultiple(ids)
-    .pipe(takeUntil(this.ngUnsubscribe))
-    .subscribe({
-      next:() =>{
-        this.notificationService.showSuccess("Delete successfully completed");
-        this.loadData();
-        this.selectedItems = [];
-        this.toggleBlockUI(false);
-      },
-      error:() =>{
-        this.toggleBlockUI(false);
-      },
-    });
+    this.productService
+      .deleteMultiple(ids)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: () => {
+          this.notificationService.showSuccess('Delete successfully completed');
+          this.loadData();
+          this.selectedItems = [];
+          this.toggleBlockUI(false);
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+        },
+      });
   }
+
+
+  loadThumbnail(fileName: string, item: ProductInListDto) {
+    this.productService
+      .getThumbnailImage(fileName)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: string) => {
+          const fileExt = fileName.split('.').pop();
+          const imageUrl = `data:image/${fileExt};base64, ${response}`;
+          item.thumbnailPicture = imageUrl; // Không sử dụng bypassSecurityTrustUrl ở đây
+        },
+      });
+  }
+
+
+
+
+
 }

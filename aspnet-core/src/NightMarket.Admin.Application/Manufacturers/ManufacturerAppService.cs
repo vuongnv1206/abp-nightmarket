@@ -18,7 +18,7 @@ namespace NightMarket.Admin.Manufacturers
             Manufacturer,
             ManufacturerDto,
             Guid,
-            PagedAndSortedResultRequestDto,
+            PagedResultRequestDto,
             CreateUpdateManufacturerDto>,
         IManufacturerAppService
     {

@@ -76,9 +76,11 @@
         <th>Category</th>
         <th>Type</th>
         <th>Price</th>
+        <th>Image</th>
         <th>Sort Order</th>
         <th>Visible</th>
         <th>Active</th>
+        <th>Attribute</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -93,6 +95,8 @@
         <td>{{ item.categoryName }}</td>
         <td>{{ getProductTypeName(item.productType) }}</td>
         <td>{{ item.sellPrice }}</td>
+        <td><img [src]="item.thumbnailPicture" [alt]="item.name" width="100" class="shadow-4" /></td>
+
         <td>{{ item.sortOrder }}</td>
         <td>
           <p-tag *ngIf="item.visibility === true" severity="success" value="Visibility"></p-tag>
@@ -102,7 +106,17 @@
           <p-tag *ngIf="item.isActive === true" value="Active" severity="success"></p-tag>
           <p-tag *ngIf="item.isActive === false" value="Lock" severity="danger"></p-tag>
         </td>
-        <!-- <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="100" class="shadow-4" /></td> -->
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Thuộc tính"
+            icon="fa fa-pencil"
+            class="p-button-text"
+            (click)="manageProductAttribute(item.id)"
+          ></button>
+        </td>
         <!-- <td>{{product.price | currency:'USD'}}</td> -->
 
         <!-- <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td> -->

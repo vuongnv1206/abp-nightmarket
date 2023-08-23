@@ -11,7 +11,7 @@ namespace NightMarket.Admin.ProductAttributes
 	public interface IProductAttributeAppService :
 	ICrudAppService<ProductAttributeDto,
 			Guid,
-			PagedAndSortedResultRequestDto,
+			PagedResultRequestDto,
 			CreateUpdateProductAttributeDto>
 	{
 
