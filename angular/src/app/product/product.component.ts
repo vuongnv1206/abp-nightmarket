@@ -5,7 +5,7 @@ import { AuthService } from '../shared/services/auth.service';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { NotificationService } from '../shared/services/notification.service';
 import { ProductType } from '@proxy/night-market/products';
@@ -21,8 +21,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ProductComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
   blockedPanel = false;
-  items: ProductInListDto[] = [];
-  public selectedItems: ProductInListDto[] = [];
+  products: ProductInListDto[] = [];
+  product: ProductDto;
+  selectedProducts: ProductInListDto[] = [];
   public thumbnailImage;
 
 
@@ -44,7 +45,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private confirmmationService: ConfirmationService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnDestroy(): void {
@@ -69,11 +70,10 @@ export class ProductComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: (response: PagedResultDto<ProductInListDto>) => {
-          this.items = response.items;
-          for (let item of this.items) {
-            this.loadThumbnail(item.thumbnailPicture, item);
-          }
-
+          this.products = response.items;
+          // for (let item of this.products) {
+          //   this.loadThumbnail(item.thumbnailPicture, item);
+          // }
           this.totalCount = response.totalCount;
           this.toggleBlockUI(false);
         },
@@ -104,41 +104,73 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  public showAddModal() {
+  openNew() {
+    const newProduct: ProductDto = {
+      productType: ProductType.Single,
+      visibility: true,
+      isActive: true,
+      sellPrice: 0
+    };
     const ref = this.dialogService.open(ProductDetailComponent, {
       header: 'Add Product',
-      width: '70%',
-    });
+      width: '40%',
+      data: newProduct,
+      modal: true,
+      styleClass:'p-fluid'
 
+    });
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
         this.loadData();
         this.notificationService.showSuccess('Add new product successfully');
-        this.selectedItems = [];
+        this.selectedProducts = [];
       }
     });
   }
 
-  public showEditModal() {
-    if (this.selectedItems.length == 0) {
-      this.notificationService.showError('Choose atleast one product');
+
+  public showEditModalGlobal() {
+    if (this.selectedProducts.length == 0) {
+      this.notificationService.showError('Select one product !');
       return;
     }
-    const id = this.selectedItems[0].id;
+    const id = this.selectedProducts[0].id;
     const ref = this.dialogService.open(ProductDetailComponent, {
       data: { id: id },
+      width: '40%',
       header: 'Update Product',
-      width: '70%',
+      modal: true,
+      styleClass:'p-fluid'
     });
+
 
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
         this.loadData();
-        this.selectedItems = [];
+        this.selectedProducts = [];
         this.notificationService.showSuccess('Update product successfully');
       }
     });
   }
+
+  editProduct(product: ProductInListDto) {
+    this.product = { ...product };
+    const ref = this.dialogService.open(ProductDetailComponent, {
+      data: { id: this.product.id},
+      width: '40%',
+      header: 'Update Product',
+      modal: true,
+      styleClass:'p-fluid'
+
+    });
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        this.loadData();
+        this.notificationService.showSuccess('Update product successfully');
+      }
+    });
+
+}
 
   manageProductAttribute(id: string) {
     const ref = this.dialogService.open(ProductAttributeComponent, {
@@ -146,13 +178,13 @@ export class ProductComponent implements OnInit, OnDestroy {
         id: id,
       },
       header: 'Quản lý thuộc tính sản phẩm',
-      width: '70%',
+      width: '40%',
     });
 
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
         this.loadData();
-        this.selectedItems = [];
+        this.selectedProducts = [];
         this.notificationService.showSuccess('Cập nhật thuộc tính sản phẩm thành công');
       }
     });
@@ -169,12 +201,12 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   deleteItems() {
-    if (this.selectedItems.length == 0) {
+    if (this.selectedProducts.length == 0) {
       this.notificationService.showError('Must be at least one item');
       return;
     }
     var ids = [];
-    this.selectedItems.forEach(element => {
+    this.selectedProducts.forEach(element => {
       ids.push(element.id);
     });
     this.confirmmationService.confirm({
@@ -185,6 +217,17 @@ export class ProductComponent implements OnInit, OnDestroy {
     });
   }
 
+  deleteProduct(product: ProductDto) {
+    this.confirmmationService.confirm({
+        message: 'Are you sure you want to delete ' + product.name + '?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.deleteItemsConfirmed([product.id]);
+        }
+    });
+}
+
   deleteItemsConfirmed(ids: string[]) {
     this.toggleBlockUI(true);
     this.productService
@@ -194,7 +237,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         next: () => {
           this.notificationService.showSuccess('Delete successfully completed');
           this.loadData();
-          this.selectedItems = [];
+          this.selectedProducts = [];
           this.toggleBlockUI(false);
         },
         error: () => {
@@ -216,6 +259,20 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  // loadThumbnail(fileName: string) {
+  //   this.productService
+  //     .getThumbnailImage(fileName)
+  //     .pipe(takeUntil(this.ngUnsubscribe))
+  //     .subscribe({
+  //       next: (response: string) => {
+  //         var fileExt = this.selectedEntity.thumbnailPicture?.split('.').pop();
+  //         this.thumbnailImage = this.sanitizer.bypassSecurityTrustResourceUrl(
+  //           `data:image/${fileExt};base64, ${response}`
+  //         );
+  //       },
+  //     });
+  // }
 
 
 

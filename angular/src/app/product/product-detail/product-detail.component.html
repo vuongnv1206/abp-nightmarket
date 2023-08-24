@@ -1,194 +1,93 @@
-<form [formGroup]="form" (ngSubmit)="saveChange()" skipValidation>
-  <p-panel #panel header="Product">
-    <!-- Form grid -->
-    <div class="formgrid grid">
-      <!-- Name -->
-      <div class="field col-12">
-        <label for="name" class="block">Name<span class="required">*</span></label>
-        <input
-          id="name"
-          pInputText
-          (keyup)="generateSlug()"
-          type="text"
-          class="w-full"
-          formControlName="name"
-        />
-        <!-- Validation Name -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="name"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
+
+      <!-- <img [src]="loadThumbnail(selectedEntity.thumbnailPicture)"*ngIf="selectedEntity.thumbnailPicture" /> -->
+
+<!-- Name + Slug -->
+      <div class="formgrid grid">
+        <div class="field col">
+          <label for="name">Name</label>
+          <input type="text" pInputText id="name" [(ngModel)]="product.name" (keyup)="generateSlug()" required autofocus />
+          <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
+        </div>
+        <div class="field col">
+          <label for="slug">Slug</label>
+          <input type="text" pInputText id="slug" [(ngModel)]="product.slug"  required autofocus />
+          <small class="p-error" *ngIf="submitted && !product.slug">Slug is required.</small>
+        </div>
+     </div>
+<!-- Code _ SKU -->
+     <div class="formgrid grid">
+      <div class="field col">
+        <label for="code">Code</label>
+        <input type="text" pInputText id="code" [(ngModel)]="product.code" required autofocus />
+        <small class="p-error" *ngIf="submitted && !product.code">Code is required.</small>
       </div>
-      <!-- Code -->
-      <div class="field col-12">
-        <label for="code" class="block">Code<span class="required">*</span></label>
-        <input id="code" pInputText type="text" formControlName="code" />
-        <!-- Validation Code -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="code"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
+      <div class="field col">
+        <label for="sku">SKU</label>
+        <input type="text" pInputText id="sku" [(ngModel)]="product.sku"  required autofocus />
+        <small class="p-error" *ngIf="submitted && !product.sku">SKU is required.</small>
       </div>
-      <!-- Slug -->
-      <div class="field col-12">
-        <label for="slug" class="block">Slug<span class="required">*</span></label>
-        <input id="slug" pInputText type="text" class="w-full" formControlName="slug" />
-        <!-- Validation slug -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="slug"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- SKU -->
-      <div class="field col-12">
-        <label for="sku" class="block">SKU<span class="required">*</span></label>
-        <input id="sku" pInputText type="text" class="w-full" formControlName="sku" />
-        <!-- Validation SKU -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="sku"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Manufacturer -->
-      <div class="field col-12">
-        <label for="manufacturer" class="block">Manufacturer<span class="required">*</span></label>
-        <p-dropdown
-          inputId="manufacturer"
-          [options]="manufacturers"
-          formControlName="manufacturerId"
-          placeholder="Select a manufacturer"
-          [showClear]="true"
-          [filter]="true"
-          filterBy=""
-          autoWidth="false"
-          [style]="{ width: '100%' }"
-        ></p-dropdown>
-        <!-- Validation Manufacturer -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="manufacturerId"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Category -->
-      <div class="field col-12">
-        <label for="category" class="block">Category<span class="required">*</span></label>
-        <p-dropdown
-          inputId="category"
-          [options]="productCategories"
-          formControlName="categoryId"
-          placeholder="Select a category"
-          [showClear]="true"
-          [filter]="true"
-          filterBy=""
-          autoWidth="false"
-          [style]="{ width: '100%' }"
-        ></p-dropdown>
-        <!-- Validation Category -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="categoryId"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Product Type -->
-      <div class="field col-12">
-        <label for="productTypes" class="block">Product Type<span class="required">*</span></label>
-        <p-dropdown
-          inputId="productTypes"
-          [options]="productTypes"
-          formControlName="productType"
-          placeholder="Select a productType"
-          [showClear]="true"
-          autoWidth="false"
-          [style]="{ width: '100%' }"
-        ></p-dropdown>
-        <!-- Validation ProductType -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="productType"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Sort Order -->
-      <div class="field col-12">
-        <label for="sortOrder" class="block">Sort Order<span class="required">*</span></label>
-        <p-inputNumber id="sortOrder" formControlName="sortOrder"></p-inputNumber>
-        <!-- Validation SortOrder -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="sortOrder"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Price -->
-      <div class="field col-12">
-        <label for="sellPrice" class="block">Price<span class="required">*</span></label>
-        <p-inputNumber inputId="sellPrice" formControlName="sellPrice"></p-inputNumber>
-        <!-- Validation Price -->
-        <app-validation-message
-          [entityForm]="form"
-          fieldName="sellPrice"
-          [validationMessages]="validationMessages"
-        ></app-validation-message>
-      </div>
-      <!-- Thumbnail -->
-      <div class="field col-12 md-col-6">
-        <label for="thumbnailImage" class="block">Image</label>
-        <input type="file" id="thumbnailImage" class="w-full" (change)="onFileChange($event)">
-      </div>
-      <div class="field col-12 md-col-6">
-          <p-image
-            [src]="thumbnailImage"
-            [alt]="selectedEntity.name"
-            width="250"
-            [preview]="true"
-          ></p-image>
-      </div>
-      <!-- Visibility -->
-      <div class="field-checkbox col-12 md:col-3">
-        <p-checkbox formControlName="visibility" inputId="visibility" [binary]="true"></p-checkbox>
-        <label for="visibility">Visibility</label>
-      </div>
-      <!-- Is Active -->
-      <div class="field-checkbox col-12 md:col-3">
-        <p-checkbox formControlName="isActive" inputId="isActive" [binary]="true"></p-checkbox>
-        <label for="isActive">Is Active</label>
-      </div>
-      <!-- Meta desc -->
-      <div class="field col-12">
-        <label for="seoMetaDescription" class="block">Seo Meta Description</label>
-        <textarea
-          id="seoMetaDescription"
-          pInputTextarea
-          class="w-full"
-          formControlName="seoMetaDescription"
-        ></textarea>
-      </div>
-      <!-- Description -->
-      <div class="field col-12">
-        <label for="description" class="block">Description</label>
-        <p-editor
-          formControlName="description"
-          id="description"
-          [style]="{ height: '320px' }"
-        ></p-editor>
-      </div>
+   </div>
+<!-- Price + Sort Order -->
+   <div class="formgrid grid">
+    <div class="field col">
+      <label for="sellPrice">Price</label>
+      <p-inputNumber id="price" [(ngModel)]="product.sellPrice" mode="currency" currency="USD" locale="en-US" required autofocus ></p-inputNumber>
+      <small class="p-error" *ngIf="submitted && !product.sellPrice">Sell price is required.</small>
     </div>
-    <!-- [disabled]="!form.valid || btnDisabled" -->
-    <ng-template pTemplate="footer">
-      <p-button type="submit" icon="fa fa-save" iconPos="left" label="Save"></p-button>
+    <div class="field col">
+      <label for="sortOrder">SortOrder</label>
+      <input type="text" pInputText id="sortOrder" [(ngModel)]="product.sortOrder"  required autofocus />
+      <small class="p-error" *ngIf="submitted && !product.sortOrder">SKU is required.</small>
+    </div>
+ </div>
+ <!--  Product Type -->
+ <div class="field">
+  <label for="productType">Type</label>
+  <p-dropdown [(ngModel)]="product.productType" inputId="productType" [options]="productTypes">
+    <ng-template pTemplate="selectedItem">
+      <p-tag [value]="getProductTypeName(product.productType)" [severity]="getSeverity(getProductTypeName(product.productType))"></p-tag>
     </ng-template>
-    <!-- Block UI -->
+    <ng-template let-option pTemplate="item">
+          <p-tag [value]="option.label" [severity]="getSeverity(option.label)"></p-tag>
+    </ng-template>
+  </p-dropdown>
+</div>
+<!-- Category -->
+      <div class="field">
+        <label class="block">Category<span class="required">*</span></label>
+        <p-dropdown [options]="productCategories" [(ngModel)]="product.categoryId" placeholder="Select a category" [showClear]="true"></p-dropdown>
+      </div>
+<!-- Manufacturer-->
+      <div class="field">
+        <label class="block">Manufacturer<span class="required">*</span></label>
+    <p-dropdown [options]="manufacturers" [(ngModel)]="product.manufacturerId"  placeholder="Select a manufacturer" [showClear]="true"></p-dropdown>
+    </div>
+<!-- Is Active + Visibility -->
+<div class="field">
+  <div class="flex gap-3">
+    <p-checkbox  binary="true" id="visibility"  [(ngModel)]="product.visibility"></p-checkbox>
+    <label for="visibility">Visible</label>
+    <p-checkbox binary="true" id="isActive"  [(ngModel)]="product.isActive"></p-checkbox>
+    <label for="isActive">Active</label>
+  </div>
+</div>
 
-    <p-blockUI [target]="panel" [blocked]="blockedPanel">
-      <i class="pi pi-lock" style="font-size: 3rem"></i>
 
-      <div class="spinner"></div>
-    </p-blockUI>
-  </p-panel>
-</form>
+
+<!-- Seo  -->
+  <div class="field">
+      <label for="seoMetaDescription">Seo Description</label>
+      <textarea id="seoMetaDescription" pInputTextarea [(ngModel)]="product.seoMetaDescription" rows="3" cols="20"></textarea>
+  </div>
+<!-- Description -->
+  <div class="field">
+    <label for="description" class="block">Description</label>
+    <p-editor  [style]="{ height: '320px' }" [(ngModel)]="product.description"></p-editor>
+  </div>
+  <div class="flex justify-content gap-3">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveChange()"></button>
+  </div>
+
+
+<!-- <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog> -->

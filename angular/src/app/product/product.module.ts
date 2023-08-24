@@ -22,6 +22,8 @@ import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
 import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
@@ -45,6 +47,8 @@ import { ProductAttributeComponent } from './product-attribute/product-attribute
     ImageModule,
     ConfirmDialogModule,
     ToastModule,
+    ToolbarModule,
+    DialogModule
   ],
 
 

@@ -22,7 +22,7 @@ using Volo.Abp.ObjectMapping;
 
 namespace NightMarket.Admin.Products
 {
-	[Authorize]
+	
 	public class ProductAppService :
 		CrudAppService<
 			Product,
@@ -116,7 +116,7 @@ namespace NightMarket.Admin.Products
 			if (product.CategoryId != input.CategoryId)
 			{
 				product.CategoryId = input.CategoryId;
-				var category = await _categoryRepository.GetAsync(input.CategoryId);
+				var category = await _categoryRepository.GetAsync(input.CategoryId);  
 				product.CategoryName = category.Name;
 				product.CategorySlug = category.Slug;
 			}
