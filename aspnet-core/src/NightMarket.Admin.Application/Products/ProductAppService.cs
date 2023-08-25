@@ -165,6 +165,11 @@ namespace NightMarket.Admin.Products
 				.Skip(input.SkipCount)
 				.Take(input.MaxResultCount));
 
+			foreach (var productDto in data)
+			{
+				productDto.ThumbnailPicture = await GetThumbnailImageAsync(productDto.ThumbnailPicture);
+			}
+
 			return new PagedResultDto<ProductInListDto>()
 			{
 				TotalCount = totalCount,

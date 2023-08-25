@@ -72,6 +72,19 @@
   </div>
 </div>
 
+<!-- Thumbnail Image -->
+<div class="field col-12 md:col-6">
+  <label for="thumbnailImage">Thumbnail Image</label>
+  <input id="thumbnailImage" type="file" class="w-full">
+</div>
+<div class="field col-12 md:col-6">
+  <p-image
+    [src]="product.thumbnailPicture"
+    [alt]="product.name"
+    width="250"
+    [preview]="true"
+  ></p-image>
+</div>
 
 
 <!-- Seo  -->
