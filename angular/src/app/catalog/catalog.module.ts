@@ -1,7 +1,5 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../shared/shared.module';
-import { ProductComponent } from './product.component';
-import { ProductRoutingModule } from './product-routing.module';
 import { PanelModule} from 'primeng/panel';
 import { TableModule} from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
@@ -10,13 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ProductDetailComponent } from './product-detail/product-detail.component';
+
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
-import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
@@ -26,11 +23,29 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
-import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
+import { NightMarketSharedModule } from 'src/app/shared/modules/nightmarket-shared.module';
+import { ProductComponent } from './product/product.component';
+import { ProductDetailComponent } from './product/product-detail/product-detail.component';
+import { ProductAttributeComponent } from './product/product-attribute/product-attribute.component';
+import { AttributeComponent } from './attribute/attribute.component';
+import { AttributeDetailComponent } from './attribute/attribute-detail/attribute-detail.component';
+import { SharedModule } from '../shared/shared.module';
+import { CatalogRoutingModule } from './catalog-routing.module';
+
+
 @NgModule({
-  declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
-  imports: [SharedModule, ProductRoutingModule,
-    PanelModule,
+  declarations: [
+    ProductComponent,
+    ProductDetailComponent,
+    ProductAttributeComponent,
+    AttributeComponent,
+    AttributeDetailComponent,
+  ],
+  imports: [
+    SharedModule,
+    CatalogRoutingModule,
+    CommonModule,
+     PanelModule,
     TableModule,
     PaginatorModule,
     BlockUIModule,
@@ -54,7 +69,5 @@ import { ProductAttributeComponent } from './product-attribute/product-attribute
     FileUploadModule,
     CalendarModule
   ],
-
-
 })
-export class ProductModule {}
+export class CatalogModule { }

@@ -1,15 +1,14 @@
 import { PagedResultDto } from '@abp/ng.core';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService } from '../shared/services/auth.service';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductAttributeDto, ProductAttributeInListDto, ProductAttributeService } from '@proxy/product-attributes';
 import { DialogService } from 'primeng/dynamicdialog';
-import { NotificationService } from '../shared/services/notification.service';
+
 import { ConfirmationService } from 'primeng/api';
 import { AttributeType } from '@proxy/night-market/product-attributes';
 import { AttributeDetailComponent } from './attribute-detail/attribute-detail.component';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-attribute',

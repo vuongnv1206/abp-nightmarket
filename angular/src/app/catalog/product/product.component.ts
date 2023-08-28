@@ -1,17 +1,15 @@
 import { PagedResultDto } from '@abp/ng.core';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService } from '../shared/services/auth.service';
 import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
-import { NotificationService } from '../shared/services/notification.service';
 import { ProductType } from '@proxy/night-market/products';
 import { ConfirmationService } from 'primeng/api';
 import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-product',

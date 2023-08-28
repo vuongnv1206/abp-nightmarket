@@ -1,8 +1,10 @@
+import { KeyFilterModule } from 'primeng/keyfilter';
+import { PickListModule } from 'primeng/picklist';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { CommonModule } from '@angular/common';
-import { PanelModule} from 'primeng/panel';
-import { TableModule} from 'primeng/table';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { BlockUIModule } from 'primeng/blockui';
 import { ButtonModule } from 'primeng/button';
@@ -14,21 +16,29 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
-import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { BadgeModule } from 'primeng/badge';
-import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { AttributeComponent } from './attribute.component';
-import { AttributeDetailComponent } from './attribute-detail/attribute-detail.component';
-import { AttributeRoutingModule } from './attribute-routing.module';
+import { CalendarModule } from 'primeng/calendar';
+import { RoleComponent } from './role/role.component';
+import { RoleDetailComponent } from './role/role-detail/role-detail.component';
+import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
+import { SystemRoutingModule } from './system-routing.module';
 
 
 @NgModule({
-  declarations: [AttributeComponent,AttributeDetailComponent],
-  imports: [SharedModule,AttributeRoutingModule,
+  declarations: [
+    RoleComponent,
+    RoleDetailComponent,
+    // PermissionGrantComponent,
+    // UserComponent,
+    // UserDetailComponent,
+    // RoleAssignComponent,
+    // SetPasswordComponent
+  ],
+  imports: [
     CommonModule,
+    SharedModule,
     PanelModule,
     TableModule,
     PaginatorModule,
@@ -44,10 +54,12 @@ import { AttributeRoutingModule } from './attribute-routing.module';
     EditorModule,
     NightMarketSharedModule,
     BadgeModule,
-    TagModule,
     ImageModule,
     ConfirmDialogModule,
-    ToastModule,
+    CalendarModule,
+    SystemRoutingModule,
+    PickListModule,
+    KeyFilterModule
   ]
 })
-export class AttributeModule { }
+export class SystemModule { }
