@@ -11,7 +11,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
-import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -23,6 +22,11 @@ import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { CalendarModule } from 'primeng/calendar';
+import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule,
@@ -45,6 +49,10 @@ import { ToastModule } from 'primeng/toast';
     ImageModule,
     ConfirmDialogModule,
     ToastModule,
+    ToolbarModule,
+    DialogModule,
+    FileUploadModule,
+    CalendarModule
   ],
 
 

@@ -1,4 +1,6 @@
 ﻿using NightMarket.Admin.Commons;
+using NightMarket.Admin.ProductAttributes;
+using NightMarket.Admin.Products.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +13,7 @@ namespace NightMarket.Admin.Products
     public interface IProductAppService : 
         ICrudAppService<ProductDto,
             Guid,
-            PagedAndSortedResultRequestDto,
+            PagedResultRequestDto,
             CreateUpdateProductDto>
     {
         Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(ProductListFilterDto input);
@@ -24,5 +26,16 @@ namespace NightMarket.Admin.Products
         Task<string> GetThumbnailImageAsync(string fileName);
 
         Task<string> GetSuggestNewCodeAsync();
-    }
+
+        Task<ProductAttributeValueDto> AddProductAttributeAsync(AddUpdateProductAttributeDto input);
+		Task<ProductAttributeValueDto> UpdateProductAttributeAsync(Guid id,AddUpdateProductAttributeDto input);
+
+
+		Task RemoveProductAttributeAsync(Guid attributeId, Guid id);
+
+        Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId);
+
+		Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributeAsync(ProductAttributeListFilterDto input);
+
+	}
 }

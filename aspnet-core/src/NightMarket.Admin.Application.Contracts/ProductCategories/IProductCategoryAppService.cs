@@ -11,7 +11,7 @@ namespace NightMarket.Admin.ProductCategories
     public interface IProductCategoryAppService : 
         ICrudAppService<ProductCategoryDto,
             Guid,
-            PagedAndSortedResultRequestDto,
+            PagedResultRequestDto,
             CreateUpdateProductCategoryDto>
     {
 

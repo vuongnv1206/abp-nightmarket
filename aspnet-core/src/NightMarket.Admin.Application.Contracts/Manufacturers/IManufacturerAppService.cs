@@ -11,7 +11,7 @@ namespace NightMarket.Admin.Manufacturers
     public interface IManufacturerAppService :
         ICrudAppService<ManufacturerDto,
             Guid,
-            PagedAndSortedResultRequestDto,
+            PagedResultRequestDto,
             CreateUpdateManufacturerDto>
     {
         Task<PagedResultDto<ManufacturerInListDto>> GetListWithFilterAsync(BaseListFilterDto input);

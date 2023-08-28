@@ -34,10 +34,6 @@ namespace NightMarket.Configurations.Products
                .IsUnicode(false)
                .IsRequired();
 
-
-            builder.Property(x => x.ThumbnailPicture)
-               .HasMaxLength(250);
-
             builder.Property(x => x.SeoMetaDescription)
              .HasMaxLength(250);
 
