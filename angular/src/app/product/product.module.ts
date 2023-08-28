@@ -24,6 +24,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { CalendarModule } from 'primeng/calendar';
 import { ProductAttributeComponent } from './product-attribute/product-attribute.component';
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
@@ -48,7 +50,9 @@ import { ProductAttributeComponent } from './product-attribute/product-attribute
     ConfirmDialogModule,
     ToastModule,
     ToolbarModule,
-    DialogModule
+    DialogModule,
+    FileUploadModule,
+    CalendarModule
   ],
 
 

@@ -5,19 +5,12 @@
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()" ></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteItems()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
-      <button pButton pRiffle label="Update" icon="fa fa-minus" class="p-button-help mr-2" (click)="showEditModalGlobal()" *ngIf="selectedProducts.length === 1"></button>
+      <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger mr-2" (click)="deleteItems()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+      <button pButton pRiffle label="Update" icon="pi pi-pencil" class="p-button-help" (click)="showEditModalGlobal()" [disabled]="selectedProducts.length !== 1"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
-      <p-fileUpload
-        mode="basic"
-        accept="image/*"
-        [maxFileSize]="1000000"
-        label="Import"
-        chooseLabel="Import"
-        class="mr-2 inline-block"
-      ></p-fileUpload>
+      <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
       <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
     </ng-template>
   </p-toolbar>
@@ -45,17 +38,14 @@
         <h5 class="m-0">Manage Products</h5>
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
-          <input pInputText type="text" [(ngModel)]="keyWord" placeholder="Search keyword" />
+          <input pInputText pRipple class="mr-2" type="text" [(ngModel)]="keyWord" placeholder="Search keyword" />
+          <p-dropdown class="mr-2" [options]="productCategories" [(ngModel)]="categoryId" placeholder="Select category"></p-dropdown>
+          <button label="Search" pButton icon="fa fa-search" (click)="loadData()"></button>
         </span>
+
       </div>
-      <div class="field">
-        <p-dropdown
-          [options]="productCategories"
-          [(ngModel)]="categoryId"
-          placeholder="Select category"
-        ></p-dropdown>
-      </div>
-      <button label="Search" pButton icon="fa fa-search" (click)="loadData()"></button>
+
+
     </ng-template>
 
     <!-- Header -->
@@ -65,7 +55,7 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
         <th>Code</th>
-        <th>SKU</th>
+        <!-- <th>SKU</th> -->
         <th pSortableColumn="name" style="min-width:15rem">Name <p-sortIcon field="name"></p-sortIcon></th>
         <th pSortableColumn="categoryName" style="min-width:10rem">Category <p-sortIcon field="categoryName"></p-sortIcon></th>
         <th pSortableColumn="productType" style="min-width:10rem">Type <p-sortIcon field="productType"></p-sortIcon></th>
@@ -74,7 +64,7 @@
         <th pSortableColumn="sortOrder" style="min-width:10rem">SortOrder <p-sortIcon field="sortOrder"></p-sortIcon></th>
         <th>Visible</th>
         <th>Active</th>
-        <th>Attribute</th>
+        <th></th>
         <th></th>
       </tr>
     </ng-template>
@@ -84,13 +74,13 @@
           <p-tableCheckbox [value]="product"></p-tableCheckbox>
         </td>
         <td>{{ product.code }}</td>
-        <td>{{ product.sku }}</td>
+        <!-- <td>{{ product.sku }}</td> -->
         <td>{{ product.name }}</td>
         <td>{{ product.categoryName }}</td>
         <td>{{ getProductTypeName(product.productType) }}</td>
         <td>{{ product.sellPrice | currency: 'USD' }}</td>
         <td>
-          <!-- <img [src]="loadThumbnail(product.thumbnailPicture)" [alt]="product.name" width="100" class="shadow-4" /> -->
+          <img [src]="product.thumbnailPicture" [alt]="product.name" width="100" class="shadow-4" />
         </td>
 
         <td>{{ product.sortOrder }}</td>
@@ -103,20 +93,12 @@
           <p-tag *ngIf="product.isActive === false" value="Lock" severity="danger"></p-tag>
         </td>
         <td>
-          <button
-            pButton
-            pRipple
-            type="button"
-            label="Thuộc tính"
-            icon="fa fa-pencil"
-            class="p-button-text"
-            (click)="manageProductAttribute(product.id)"
-          ></button>
+          <button pButton pRipple type="button" label="Thuộc tính" icon="fa fa-pencil" class="p-button-text" (click)="manageProductAttribute(product.id)"></button>
         </td>
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
           <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
-      </td>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">

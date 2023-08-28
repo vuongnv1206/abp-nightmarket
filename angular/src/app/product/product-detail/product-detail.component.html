@@ -2,105 +2,105 @@
       <!-- <img [src]="loadThumbnail(selectedEntity.thumbnailPicture)"*ngIf="selectedEntity.thumbnailPicture" /> -->
 
 <!-- Name + Slug -->
-      <div class="formgrid grid">
-        <div class="field col">
-          <label for="name">Name</label>
-          <input type="text" pInputText id="name" [(ngModel)]="product.name" (keyup)="generateSlug()" required autofocus />
-          <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
-        </div>
-        <div class="field col">
-          <label for="slug">Slug</label>
-          <input type="text" pInputText id="slug" [(ngModel)]="product.slug"  required autofocus />
-          <small class="p-error" *ngIf="submitted && !product.slug">Slug is required.</small>
-        </div>
-     </div>
+<div class="formgrid grid">
+  <div class="field col">
+    <label for="name">Name</label>
+    <input type="text" pInputText id="name" [(ngModel)]="product.name" (keyup)="generateSlug()" required autofocus />
+    <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
+  </div>
+  <div class="field col">
+    <label for="slug">Slug</label>
+    <input type="text" pInputText id="slug" [(ngModel)]="product.slug"  required autofocus />
+    <small class="p-error" *ngIf="submitted && !product.slug">Slug is required.</small>
+  </div>
+</div>
 <!-- Code _ SKU -->
-     <div class="formgrid grid">
-      <div class="field col">
-        <label for="code">Code</label>
-        <input type="text" pInputText id="code" [(ngModel)]="product.code" required autofocus />
-        <small class="p-error" *ngIf="submitted && !product.code">Code is required.</small>
-      </div>
-      <div class="field col">
-        <label for="sku">SKU</label>
-        <input type="text" pInputText id="sku" [(ngModel)]="product.sku"  required autofocus />
-        <small class="p-error" *ngIf="submitted && !product.sku">SKU is required.</small>
-      </div>
-   </div>
+<div class="formgrid grid">
+<div class="field col">
+  <label for="code">Code</label>
+  <input type="text" pInputText id="code" [(ngModel)]="product.code" required autofocus />
+  <small class="p-error" *ngIf="submitted && !product.code">Code is required.</small>
+</div>
+<div class="field col">
+  <label for="sku">SKU</label>
+  <input type="text" pInputText id="sku" [(ngModel)]="product.sku"  required autofocus />
+  <small class="p-error" *ngIf="submitted && !product.sku">SKU is required.</small>
+</div>
+</div>
 <!-- Price + Sort Order -->
-   <div class="formgrid grid">
-    <div class="field col">
-      <label for="sellPrice">Price</label>
-      <p-inputNumber id="price" [(ngModel)]="product.sellPrice" mode="currency" currency="USD" locale="en-US" required autofocus ></p-inputNumber>
-      <small class="p-error" *ngIf="submitted && !product.sellPrice">Sell price is required.</small>
-    </div>
-    <div class="field col">
-      <label for="sortOrder">SortOrder</label>
-      <input type="text" pInputText id="sortOrder" [(ngModel)]="product.sortOrder"  required autofocus />
-      <small class="p-error" *ngIf="submitted && !product.sortOrder">SKU is required.</small>
-    </div>
- </div>
- <!--  Product Type -->
- <div class="field">
-  <label for="productType">Type</label>
-  <p-dropdown [(ngModel)]="product.productType" inputId="productType" [options]="productTypes">
-    <ng-template pTemplate="selectedItem">
-      <p-tag [value]="getProductTypeName(product.productType)" [severity]="getSeverity(getProductTypeName(product.productType))"></p-tag>
-    </ng-template>
-    <ng-template let-option pTemplate="item">
-          <p-tag [value]="option.label" [severity]="getSeverity(option.label)"></p-tag>
-    </ng-template>
-  </p-dropdown>
+<div class="formgrid grid">
+<div class="field col">
+<label for="sellPrice">Price</label>
+<p-inputNumber id="price" [(ngModel)]="product.sellPrice" mode="currency" currency="USD" locale="en-US" required autofocus ></p-inputNumber>
+<small class="p-error" *ngIf="submitted && !product.sellPrice">Sell price is required.</small>
+</div>
+<div class="field col">
+<label for="sortOrder">SortOrder</label>
+<input type="text" pInputText id="sortOrder" [(ngModel)]="product.sortOrder"  required autofocus />
+<small class="p-error" *ngIf="submitted && !product.sortOrder">Sort Order is required.</small>
+</div>
+</div>
+<!--  Product Type -->
+<div class="field">
+<label for="productType">Type</label>
+<p-dropdown [(ngModel)]="product.productType" inputId="productType" [options]="productTypes">
+<ng-template pTemplate="selectedItem">
+<p-tag [value]="getProductTypeName(product.productType)" [severity]="getSeverity(getProductTypeName(product.productType))"></p-tag>
+</ng-template>
+<ng-template let-option pTemplate="item">
+    <p-tag [value]="option.label" [severity]="getSeverity(option.label)"></p-tag>
+</ng-template>
+</p-dropdown>
 </div>
 <!-- Category -->
-      <div class="field">
-        <label class="block">Category<span class="required">*</span></label>
-        <p-dropdown [options]="productCategories" [(ngModel)]="product.categoryId" placeholder="Select a category" [showClear]="true"></p-dropdown>
-      </div>
+<div class="field">
+  <label class="block">Category<span class="required">*</span></label>
+  <p-dropdown [options]="productCategories" [(ngModel)]="product.categoryId" placeholder="Select a category" [showClear]="true"></p-dropdown>
+</div>
 <!-- Manufacturer-->
-      <div class="field">
-        <label class="block">Manufacturer<span class="required">*</span></label>
-    <p-dropdown [options]="manufacturers" [(ngModel)]="product.manufacturerId"  placeholder="Select a manufacturer" [showClear]="true"></p-dropdown>
-    </div>
+<div class="field">
+  <label class="block">Manufacturer<span class="required">*</span></label>
+<p-dropdown [options]="manufacturers" [(ngModel)]="product.manufacturerId"  placeholder="Select a manufacturer" [showClear]="true"></p-dropdown>
+</div>
 <!-- Is Active + Visibility -->
 <div class="field">
-  <div class="flex gap-3">
-    <p-checkbox  binary="true" id="visibility"  [(ngModel)]="product.visibility"></p-checkbox>
-    <label for="visibility">Visible</label>
-    <p-checkbox binary="true" id="isActive"  [(ngModel)]="product.isActive"></p-checkbox>
-    <label for="isActive">Active</label>
-  </div>
+<div class="flex gap-3">
+<p-checkbox  binary="true" id="visibility"  [(ngModel)]="product.visibility"></p-checkbox>
+<label for="visibility">Visible</label>
+<p-checkbox binary="true" id="isActive"  [(ngModel)]="product.isActive"></p-checkbox>
+<label for="isActive">Active</label>
+</div>
 </div>
 
 <!-- Thumbnail Image -->
-<div class="field col-12 md:col-6">
-  <label for="thumbnailImage">Thumbnail Image</label>
-  <input id="thumbnailImage" type="file" class="w-full">
+<!-- <div class="field col-12 md:col-6">
+<label for="thumbnailImage">Thumbnail Image</label>
+<input id="thumbnailImage" type="file" class="w-full">
 </div>
 <div class="field col-12 md:col-6">
-  <p-image
-    [src]="product.thumbnailPicture"
-    [alt]="product.name"
-    width="250"
-    [preview]="true"
-  ></p-image>
-</div>
+<p-image
+[src]="product.thumbnailPicture"
+[alt]="product.name"
+width="250"
+[preview]="true"
+></p-image>
+</div> -->
 
 
 <!-- Seo  -->
-  <div class="field">
-      <label for="seoMetaDescription">Seo Description</label>
-      <textarea id="seoMetaDescription" pInputTextarea [(ngModel)]="product.seoMetaDescription" rows="3" cols="20"></textarea>
-  </div>
+<div class="field">
+<label for="seoMetaDescription">Seo Description</label>
+<textarea id="seoMetaDescription" pInputTextarea [(ngModel)]="product.seoMetaDescription" rows="3" cols="20"></textarea>
+</div>
 <!-- Description -->
-  <div class="field">
-    <label for="description" class="block">Description</label>
-    <p-editor  [style]="{ height: '320px' }" [(ngModel)]="product.description"></p-editor>
-  </div>
-  <div class="flex justify-content gap-3">
-    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveChange()"></button>
-  </div>
+<div class="field">
+<label for="description" class="block">Description</label>
+<p-editor  [style]="{ height: '320px' }" [(ngModel)]="product.description"></p-editor>
+</div>
+<div class="flex justify-content gap-3">
+<button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveChange()"></button>
+</div>
 
 
 <!-- <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog> -->
