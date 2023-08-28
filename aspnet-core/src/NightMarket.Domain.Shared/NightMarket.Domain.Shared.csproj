@@ -22,7 +22,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\NightMarket\*.json" />
+    <Compile Remove="Orders\**" />
     <Content Remove="Localization\NightMarket\*.json" />
+    <EmbeddedResource Remove="Orders\**" />
+    <None Remove="Orders\**" />
   </ItemGroup>
 
   <ItemGroup>
