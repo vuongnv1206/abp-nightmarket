@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using NightMarket.Admin.Commons;
 using NightMarket.Roles;
 using System;
@@ -13,6 +14,8 @@ using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
+using Volo.Abp.Localization;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SimpleStateChecking;
 
@@ -31,8 +34,17 @@ namespace NightMarket.Admin.Roles
 		protected IPermissionDefinitionManager PermissionDefinitionManager { get; }
 		protected ISimpleStateCheckerManager<PermissionDefinition> SimpleStateCheckerManager { get; }
 		
-		public RoleAppService(IRepository<IdentityRole, Guid> repository) : base(repository)
+		public RoleAppService(IRepository<IdentityRole, Guid> repository,
+		IPermissionManager permissionManager,
+		IPermissionDefinitionManager permissionDefinitionManager,
+		IOptions<PermissionManagementOptions> options,
+		ISimpleStateCheckerManager<PermissionDefinition> simpleStateCheckerManager)
+			: base(repository)
 		{
+			Options = options.Value;
+			PermissionManager = permissionManager;
+			PermissionDefinitionManager = permissionDefinitionManager;
+			SimpleStateCheckerManager = simpleStateCheckerManager;
 		}
 
 		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
@@ -63,7 +75,7 @@ namespace NightMarket.Admin.Roles
 
 		
 
-		[Authorize(IdentityPermissions.Roles.Create)]
+		
 
 		public async override Task<RoleDto> CreateAsync(CreateUpdateRoleDto input)
 		{
@@ -80,7 +92,7 @@ namespace NightMarket.Admin.Roles
 			return ObjectMapper.Map<IdentityRole, RoleDto>(data);
 		}
 
-		[Authorize(IdentityPermissions.Roles.Update)]
+		
 
 		public async override Task<RoleDto> UpdateAsync(Guid id, CreateUpdateRoleDto input)
 		{
@@ -104,12 +116,122 @@ namespace NightMarket.Admin.Roles
 
 		public async Task<GetPermissionListResultDto> GetPermissionsAsync(string providerName, string providerKey)
 		{
-			throw new NotImplementedException();
+			//await CheckProviderPolicy(providerName);
+
+			var result = new GetPermissionListResultDto
+			{
+				EntityDisplayName = providerKey,
+				Groups = new List<PermissionGroupDto>()
+			};
+
+			//var multiTenancySide = CurrentTenant.GetMultiTenancySide();
+
+			foreach (var group in await PermissionDefinitionManager.GetGroupsAsync())
+			{
+				var groupDto = CreatePermissionGroupDto(group);
+
+				var neededCheckPermissions = new List<PermissionDefinition>();
+
+				var permissions = group.GetPermissionsWithChildren()
+					.Where(x => x.IsEnabled)
+					.Where(x => !x.Providers.Any() || x.Providers.Contains(providerName));
+					//.Where(x => x.MultiTenancySide.HasFlag(multiTenancySide));
+
+				foreach (var permission in permissions)
+				{
+					if (await SimpleStateCheckerManager.IsEnabledAsync(permission))
+					{
+						neededCheckPermissions.Add(permission);
+					}
+				}
+
+				if (!neededCheckPermissions.Any())
+				{
+					continue;
+				}
+
+				var grantInfoDtos = neededCheckPermissions
+					.Select(CreatePermissionGrantInfoDto)
+					.ToList();
+
+				var multipleGrantInfo = await PermissionManager.GetAsync(neededCheckPermissions.Select(x => x.Name).ToArray(), providerName, providerKey);
+
+				foreach (var grantInfo in multipleGrantInfo.Result)
+				{
+					var grantInfoDto = grantInfoDtos.First(x => x.Name == grantInfo.Name);
+
+					grantInfoDto.IsGranted = grantInfo.IsGranted;
+
+					foreach (var provider in grantInfo.Providers)
+					{
+						grantInfoDto.GrantedProviders.Add(new ProviderInfoDto
+						{
+							ProviderName = provider.Name,
+							ProviderKey = provider.Key,
+						});
+					}
+
+					groupDto.Permissions.Add(grantInfoDto);
+				}
+
+				if (groupDto.Permissions.Any())
+				{
+					result.Groups.Add(groupDto);
+				}
+			}
+
+			return result;
 		}
 
-		public async Task UpdatePermissionsAsync(string providerName, string providerKey, UpdatePermissionsDto input)
+		private PermissionGrantInfoDto CreatePermissionGrantInfoDto(PermissionDefinition permission)
 		{
-			throw new NotImplementedException();
+			return new PermissionGrantInfoDto
+			{
+				Name = permission.Name,
+				DisplayName = permission.DisplayName?.Localize(StringLocalizerFactory),
+				ParentName = permission.Parent?.Name,
+				AllowedProviders = permission.Providers,
+				GrantedProviders = new List<ProviderInfoDto>()
+			};
+		}
+
+		private PermissionGroupDto CreatePermissionGroupDto(PermissionGroupDefinition group)
+		{
+			var localizableDisplayName = group.DisplayName as LocalizableString;
+
+			return new PermissionGroupDto
+			{
+				Name = group.Name,
+				DisplayName = group.DisplayName?.Localize(StringLocalizerFactory),
+				DisplayNameKey = localizableDisplayName?.Name,
+				DisplayNameResource = localizableDisplayName?.ResourceType != null
+					? LocalizationResourceNameAttribute.GetName(localizableDisplayName.ResourceType)
+					: null,
+				Permissions = new List<PermissionGrantInfoDto>()
+			};
+		}
+
+
+
+		protected virtual async Task CheckProviderPolicy(string providerName)
+		{
+			var policyName = Options.ProviderPolicies.GetOrDefault(providerName);
+			if (policyName.IsNullOrEmpty())
+			{
+				throw new AbpException($"No policy defined to get/set permissions for the provider '{providerName}'. Use {nameof(PermissionManagementOptions)} to map the policy.");
+			}
+
+			await AuthorizationService.CheckAsync(policyName);
+		}
+
+		public virtual async Task UpdatePermissionsAsync(string providerName, string providerKey, UpdatePermissionsDto input)
+		{
+			// await CheckProviderPolicy(providerName);
+
+			foreach (var permissionDto in input.Permissions)
+			{
+				await PermissionManager.SetAsync(permissionDto.Name, providerName, providerKey, permissionDto.IsGranted);
+			}
 		}
 	}
 }
