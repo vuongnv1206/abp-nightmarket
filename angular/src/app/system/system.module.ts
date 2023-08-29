@@ -24,12 +24,14 @@ import { RoleComponent } from './role/role.component';
 import { RoleDetailComponent } from './role/role-detail/role-detail.component';
 import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { SystemRoutingModule } from './system-routing.module';
+import { PermissionGrantComponent } from './role/permission-grant/permission-grant.component';
 
 
 @NgModule({
   declarations: [
     RoleComponent,
     RoleDetailComponent,
+    PermissionGrantComponent,
     // PermissionGrantComponent,
     // UserComponent,
     // UserDetailComponent,

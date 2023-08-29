@@ -16,6 +16,7 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
 using Volo.Abp.Localization;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.OpenIddict;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SimpleStateChecking;
 
@@ -126,8 +127,10 @@ namespace NightMarket.Admin.Roles
 
 			//var multiTenancySide = CurrentTenant.GetMultiTenancySide();
 
+			
+
 			foreach (var group in await PermissionDefinitionManager.GetGroupsAsync())
-			{
+			{	
 				var groupDto = CreatePermissionGroupDto(group);
 
 				var neededCheckPermissions = new List<PermissionDefinition>();
