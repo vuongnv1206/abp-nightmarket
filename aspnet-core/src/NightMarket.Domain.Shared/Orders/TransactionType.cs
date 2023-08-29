@@ -4,11 +4,11 @@ using System.Text;
 
 namespace NightMarket.Orders
 {
-    public enum TransactionType
-    {
-        ConfirmOrder = 1,
-        StartProcessing = 2,
-        FinishOrder = 3,
-        CancelOrder = 4
-    }
+	public enum TransactionType
+	{
+		ConfirmOrder = 1,
+		StartProcessing = 2,
+		FinishOrder = 3,
+		CancelOrder = 4
+	}
 }

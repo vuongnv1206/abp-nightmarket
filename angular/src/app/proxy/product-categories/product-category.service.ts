@@ -9,7 +9,7 @@ import type { BaseListFilterDto } from '../commons/models';
 })
 export class ProductCategoryService {
   apiName = 'Default';
-
+  
 
   create = (input: CreateUpdateProductCategoryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, ProductCategoryDto>({
@@ -18,7 +18,7 @@ export class ProductCategoryService {
       body: input,
     },
     { apiName: this.apiName,...config });
-
+  
 
   delete = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
@@ -26,7 +26,7 @@ export class ProductCategoryService {
       url: `/api/app/product-category/${id}`,
     },
     { apiName: this.apiName,...config });
-
+  
 
   deleteMultiple = (ids: string[], config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
@@ -35,7 +35,7 @@ export class ProductCategoryService {
       params: { ids },
     },
     { apiName: this.apiName,...config });
-
+  
 
   get = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, ProductCategoryDto>({
@@ -43,7 +43,7 @@ export class ProductCategoryService {
       url: `/api/app/product-category/${id}`,
     },
     { apiName: this.apiName,...config });
-
+  
 
   getList = (input: PagedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<ProductCategoryDto>>({
@@ -52,7 +52,7 @@ export class ProductCategoryService {
       params: { skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
-
+  
 
   getListAll = (config?: Partial<Rest.Config>) =>
     this.restService.request<any, ProductCategoryInListDto[]>({
@@ -60,7 +60,7 @@ export class ProductCategoryService {
       url: '/api/app/product-category/all',
     },
     { apiName: this.apiName,...config });
-
+  
 
   getListWithFilter = (input: BaseListFilterDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<ProductCategoryInListDto>>({
@@ -69,7 +69,7 @@ export class ProductCategoryService {
       params: { keyWord: input.keyWord, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
-
+  
 
   update = (id: string, input: CreateUpdateProductCategoryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, ProductCategoryDto>({

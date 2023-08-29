@@ -27,8 +27,7 @@ import { ToastModule } from 'primeng/toast';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
-import { AttributeComponent } from './attribute/attribute.component';
-import { AttributeDetailComponent } from './attribute/attribute-detail/attribute-detail.component';
+
 
 
 
