@@ -25,6 +25,9 @@ import { RoleDetailComponent } from './role/role-detail/role-detail.component';
 import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { SystemRoutingModule } from './system-routing.module';
 import { PermissionGrantComponent } from './role/permission-grant/permission-grant.component';
+import { UserDetailComponent } from './user/user-detail/user-detail.component';
+import { SetPasswordComponent } from './user/set-password/set-password.component';
+import { RoleAssignComponent } from './user/role-assign/role-assign.component';
 
 
 @NgModule({
@@ -32,6 +35,9 @@ import { PermissionGrantComponent } from './role/permission-grant/permission-gra
     RoleComponent,
     RoleDetailComponent,
     PermissionGrantComponent,
+    UserDetailComponent,
+    SetPasswordComponent,
+    RoleAssignComponent,
     // PermissionGrantComponent,
     // UserComponent,
     // UserDetailComponent,
