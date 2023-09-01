@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NightMarket.ProductAttributes;
-using NightMarket.Inventories;
-using NightMarket.InventoryTickets;
-using NightMarket.Manufacturers;
 using NightMarket.Orders;
-using NightMarket.ProductCategories;
-using NightMarket.Products;
 using NightMarket.Promotions;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -30,6 +24,12 @@ using NightMarket.Configurations.Products;
 using NightMarket.Configurations.Promotions;
 using NightMarket.IdentitySettings;
 using NightMarket.Configurations.IdentitySettings;
+using NightMarket.Catalogs.Manufacturers;
+using NightMarket.Catalogs.Inventories;
+using NightMarket.Catalogs.Products;
+using NightMarket.Catalogs.ProductCategories;
+using NightMarket.Catalogs.ProductAttributes;
+using NightMarket.InventoryTickets;
 
 namespace NightMarket.EntityFrameworkCore;
 

@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
-using NightMarket.Admin.Manufacturers;
-using NightMarket.Admin.ProductAttributes;
-using NightMarket.Admin.ProductCategories;
-using NightMarket.Admin.Products;
-using NightMarket.Admin.Roles;
-using NightMarket.Manufacturers;
-using NightMarket.ProductAttributes;
-using NightMarket.ProductCategories;
-using NightMarket.Products;
+using NightMarket.Admin.Catalogs.Manufacturers;
+using NightMarket.Admin.Catalogs.ProductAttributes;
+using NightMarket.Admin.Catalogs.ProductCategories;
+using NightMarket.Admin.Catalogs.Products;
+using NightMarket.Admin.Systems.Roles;
+using NightMarket.Admin.Systems.Users;
+using NightMarket.Catalogs.Manufacturers;
+using NightMarket.Catalogs.ProductAttributes;
+using NightMarket.Catalogs.ProductCategories;
+using NightMarket.Catalogs.Products;
 using NightMarket.Roles;
 using Volo.Abp.Identity;
 
@@ -51,5 +52,10 @@ public class NightMarketAdminApplicationAutoMapperProfile : Profile
 			map => map.MapFrom(x => x.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName)
 			? x.ExtraProperties[RoleConsts.DescriptionFieldName] : null));
 		CreateMap<CreateUpdateRoleDto, IdentityRole>();
+
+		//User
+		CreateMap<IdentityUser, UserDto>().ReverseMap();
+		CreateMap<IdentityUser, UserInListDto>().ReverseMap();
+
 	}
 }

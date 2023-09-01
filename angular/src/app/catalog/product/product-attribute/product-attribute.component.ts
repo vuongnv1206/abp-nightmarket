@@ -1,13 +1,13 @@
 import { ConfirmationService } from 'primeng/api';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProductAttributeInListDto, ProductAttributeService } from '@proxy/product-attributes';
-import { ProductDto, ProductService } from '@proxy/products';
+import { ProductAttributeInListDto, ProductAttributeService } from '@proxy/catalogs/product-attributes';
+import { ProductDto, ProductService } from '@proxy/catalogs/products';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { AttributeType } from '@proxy/night-market/product-attributes';
-import { ProductAttributeValueDto } from '@proxy/products/attributes';
+import { AttributeType } from '@proxy/night-market/catalogs/product-attributes';
+import { ProductAttributeValueDto } from '@proxy/catalogs/products/attributes';
 
 @Component({
   selector: 'app-product-attribute',

@@ -1,6 +1,6 @@
 {
   "culture": "vi",
-  "texts": {
+  "text": {
     "Permission:Catalog": "Danh mục",
     "Permission:Catalog.Product": "Sản phẩm",
     "Permission:Catalog.Product.Create": "Tạo mới sản phẩm",

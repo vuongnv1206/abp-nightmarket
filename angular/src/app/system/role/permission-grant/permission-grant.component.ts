@@ -1,6 +1,6 @@
 import { Component, OnDestroy,EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { RoleService } from '@proxy/roles';
+import { RoleService } from '@proxy/systems/roles';
 import { GetPermissionListResultDto, PermissionGrantInfoDto, PermissionGroupDto, UpdatePermissionDto, UpdatePermissionsDto } from '@proxy/volo/abp/permission-management';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';

@@ -1,17 +1,17 @@
 
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ProductAttributeDto, ProductAttributeInListDto, ProductAttributeService } from '@proxy/product-attributes';
+import { ProductAttributeDto, ProductAttributeInListDto, ProductAttributeService } from '@proxy/catalogs/product-attributes';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ManufacturerInListDto, ManufacturerService } from '@proxy/manufacturers';
+import { ManufacturerInListDto, ManufacturerService } from '@proxy/catalogs/manufacturers';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UtilityService } from 'src/app/shared/services/utility.service';
-import { productTypeOptions } from '@proxy/night-market/products';
+import { productTypeOptions } from '@proxy/night-market/catalogs/products';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { attributeTypeOptions } from '@proxy/night-market/product-attributes';
+import { attributeTypeOptions } from '@proxy/night-market/catalogs/product-attributes';
 
 @Component({
   selector: 'app-attribute-detail',

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NightMarket.Inventories;
-using NightMarket.ProductAttributes;
+using NightMarket.Catalogs.Inventories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

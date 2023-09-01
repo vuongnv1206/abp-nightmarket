@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
+import { ProductDto, ProductInListDto, ProductService } from '@proxy/catalogs/products';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
-import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/product-categories';
-import { ManufacturerInListDto, ManufacturerService } from '@proxy/manufacturers';
+import { ProductCategoryInListDto, ProductCategoryService } from '@proxy/catalogs/product-categories';
+import { ManufacturerInListDto, ManufacturerService } from '@proxy/catalogs/manufacturers';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UtilityService } from 'src/app/shared/services/utility.service';
-import { ProductType, productTypeOptions } from '@proxy/night-market/products';
+import { ProductType, productTypeOptions } from '@proxy/night-market//catalogs/products';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Dialog } from 'primeng/dialog';

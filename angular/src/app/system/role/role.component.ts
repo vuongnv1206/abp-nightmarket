@@ -2,7 +2,7 @@ import { PagedResultDto } from '@abp/ng.core';
 import { Subject, takeUntil } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RoleDetailComponent } from './role-detail/role-detail.component';
-import { RoleDto, RoleInListDto, RoleService } from '@proxy/roles';
+import { RoleDto, RoleInListDto, RoleService } from '@proxy/systems/roles';
 import { DialogService } from 'primeng/dynamicdialog';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { ConfirmationService } from 'primeng/api';

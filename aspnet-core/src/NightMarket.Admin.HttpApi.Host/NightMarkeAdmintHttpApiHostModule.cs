@@ -30,6 +30,8 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NightMarket.Admin;
 
@@ -46,7 +48,14 @@ namespace NightMarket.Admin;
 )]
 public class NightMarkeAdmintHttpApiHostModule : AbpModule
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+	public override void PreConfigureServices(ServiceConfigurationContext context)
+	{
+        PreConfigure<IdentityBuilder>(builder =>
+        {
+            builder.AddDefaultTokenProviders();
+        });
+	}
+	public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
@@ -54,7 +63,7 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
         ConfigureConventionalControllers();
         ConfigureAuthentication(context, configuration);
         //Add locallization
-		ConfigureLocalization();
+		//ConfigureLocalization();
 		ConfigureCache(configuration);
         ConfigureVirtualFileSystem(context);
         ConfigureDataProtection(context, configuration, hostingEnvironment);
@@ -102,14 +111,31 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "NightMarket.Admin";
-            });
-    }
+		//context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		//    .AddJwtBearer(options =>
+		//    {
+		//        options.Authority = configuration["AuthServer:Authority"];
+		//        options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+		//        options.Audience = "NightMarket.Admin";
+		//    });
+		context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+			.AddJwtBearer(options =>
+			{
+				options.Authority = configuration["AuthServer:Authority"];
+				options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+				options.Audience = "TeduEcommerce.Admin";
+				options.TokenValidationParameters = new
+				   TokenValidationParameters()
+				{
+					ValidateAudience = false,
+					ValidateIssuer = false,
+				};
+			});
+		context.Services.AddAuthorization(options =>
+		{
+			options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+		});
+	}
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
     {
@@ -127,15 +153,15 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
             });
     }
 	//Add configureLocalization
-	private void ConfigureLocalization()
-	{
-		Configure<AbpLocalizationOptions>(options =>
-		{
-			options.Languages.Add(new LanguageInfo("en", "en", "English"));
-			options.Languages.Add(new LanguageInfo("vi", "vn", "Tiếng Việt"));
+	//private void ConfigureLocalization()
+	//{
+	//	Configure<AbpLocalizationOptions>(options =>
+	//	{
+	//		options.Languages.Add(new LanguageInfo("en", "en", "English"));
+	//		options.Languages.Add(new LanguageInfo("vi", "vn", "Tiếng Việt"));
 
-		});
-	}
+	//	});
+	//}
 
 	private void ConfigureDataProtection(
         ServiceConfigurationContext context,
@@ -192,23 +218,23 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
             app.UseDeveloperExceptionPage();
         }
 
-		//app.UseAbpRequestLocalization();
-		var supportedCultures = new[]
-		 {
-				new CultureInfo("vi")
-			};
+		app.UseAbpRequestLocalization();
+		//var supportedCultures = new[]
+		// {
+		//		new CultureInfo("vi")
+		//	};
 
-		app.UseAbpRequestLocalization(options =>
-		{
-			options.DefaultRequestCulture = new RequestCulture("vi");
-			options.SupportedCultures = supportedCultures;
-			options.SupportedUICultures = supportedCultures;
-			options.RequestCultureProviders = new List<IRequestCultureProvider>
-				{
-					new QueryStringRequestCultureProvider(),
-					new CookieRequestCultureProvider()
-				};
-		});
+		//app.UseAbpRequestLocalization(options =>
+		//{
+		//	options.DefaultRequestCulture = new RequestCulture("vi");
+		//	options.SupportedCultures = supportedCultures;
+		//	options.SupportedUICultures = supportedCultures;
+		//	options.RequestCultureProviders = new List<IRequestCultureProvider>
+		//		{
+		//			new QueryStringRequestCultureProvider(),
+		//			new CookieRequestCultureProvider()
+		//		};
+		//});
 
 		app.UseCorrelationId();
         app.UseStaticFiles();
