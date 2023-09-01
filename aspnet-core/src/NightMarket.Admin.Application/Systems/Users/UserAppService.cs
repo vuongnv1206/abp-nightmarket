@@ -1,4 +1,6 @@
-﻿using NightMarket.Admin.Commons;
+﻿using Microsoft.AspNetCore.Authorization;
+using NightMarket.Admin.Commons;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,8 @@ using Volo.Abp.Identity;
 
 namespace NightMarket.Admin.Systems.Users
 {
+	[Authorize(IdentityPermissions.Users.Default, Policy = "AdminOnly")]
+
 	public class UserAppService :
 		CrudAppService<IdentityUser, UserDto, Guid, PagedResultRequestDto,
 						CreateUserDto, UpdateUserDto>, IUserAppService
@@ -22,8 +26,15 @@ namespace NightMarket.Admin.Systems.Users
 			IdentityUserManager identityUserManager) : base(repository)
 		{
 			_identityUserManager = identityUserManager;
+
+			GetPolicyName = IdentityPermissions.Users.Default;
+			GetListPolicyName = IdentityPermissions.Users.Default;
+			CreatePolicyName = IdentityPermissions.Users.Create;
+			UpdatePolicyName = IdentityPermissions.Users.Update;
+			DeletePolicyName = IdentityPermissions.Users.Delete;
 		}
 
+		[Authorize(IdentityPermissions.Users.Update)]
 		public async Task AssignRolesAsync(Guid userId, string[] roleNames)
 		{
 			var user = await _identityUserManager.FindByIdAsync(userId.ToString());
@@ -50,13 +61,14 @@ namespace NightMarket.Admin.Systems.Users
 				throw new UserFriendlyException(errors);
 			}
 		}
-
+		[Authorize(IdentityPermissions.Users.Delete)]
 		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
 		{
 			await Repository.DeleteManyAsync(ids);
 			await UnitOfWorkManager.Current.SaveChangesAsync();
 		}
 
+		[Authorize(IdentityPermissions.Users.Default)]
 		public async Task<List<UserInListDto>> GetListAllAsync(string filterKeyword)
 		{
 			var query = await Repository.GetQueryableAsync();
@@ -70,7 +82,7 @@ namespace NightMarket.Admin.Systems.Users
 			var data = await AsyncExecuter.ToListAsync(query);
 			return ObjectMapper.Map<List<IdentityUser>, List<UserInListDto>>(data);
 		}
-
+		[Authorize(IdentityPermissions.Users.Default)]
 		public async Task<PagedResultDto<UserInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
 		{
 			var query = await Repository.GetQueryableAsync();
@@ -92,6 +104,7 @@ namespace NightMarket.Admin.Systems.Users
 			return new PagedResultDto<UserInListDto>(totalCount, users);
 		}
 
+		[Authorize(IdentityPermissions.Users.Update)]
 		public async Task SetPasswordAsync(Guid userId, SetPasswordDto input)
 		{
 			var user = await _identityUserManager.FindByIdAsync(userId.ToString());
@@ -113,7 +126,7 @@ namespace NightMarket.Admin.Systems.Users
 				throw new UserFriendlyException(errors);
 			}
 		}
-
+		[Authorize(IdentityPermissions.Users.Create)]
 		public async override Task<UserDto> CreateAsync(CreateUserDto input)
 		{
 			var query = await Repository.GetQueryableAsync();
@@ -150,7 +163,7 @@ namespace NightMarket.Admin.Systems.Users
 				throw new UserFriendlyException(errors);
 			}
 		}
-
+		[Authorize(IdentityPermissions.Users.Update)]
 		public async override Task<UserDto> UpdateAsync(Guid id, UpdateUserDto input)
 		{
 			var user = await _identityUserManager.FindByIdAsync(id.ToString());
@@ -178,7 +191,7 @@ namespace NightMarket.Admin.Systems.Users
 				throw new UserFriendlyException(errors);
 			}
 		}
-
+		[Authorize(IdentityPermissions.Users.Default)]
 		public async override Task<UserDto> GetAsync(Guid id)
 		{
 			var user = await _identityUserManager.FindByIdAsync(id.ToString());

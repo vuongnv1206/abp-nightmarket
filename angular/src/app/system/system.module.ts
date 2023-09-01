@@ -20,14 +20,15 @@ import { BadgeModule } from 'primeng/badge';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
-import { RoleComponent } from './role/role.component';
-import { RoleDetailComponent } from './role/role-detail/role-detail.component';
 import { NightMarketSharedModule } from '../shared/modules/nightmarket-shared.module';
 import { SystemRoutingModule } from './system-routing.module';
-import { PermissionGrantComponent } from './role/permission-grant/permission-grant.component';
 import { UserDetailComponent } from './user/user-detail/user-detail.component';
 import { SetPasswordComponent } from './user/set-password/set-password.component';
 import { RoleAssignComponent } from './user/role-assign/role-assign.component';
+import { RoleComponent } from './role/role.component';
+import { RoleDetailComponent } from './role/role-detail/role-detail.component';
+import { PermissionGrantComponent } from './role/permission-grant/permission-grant.component';
+import { UserComponent } from './user/user.component';
 
 
 @NgModule({
@@ -38,11 +39,11 @@ import { RoleAssignComponent } from './user/role-assign/role-assign.component';
     UserDetailComponent,
     SetPasswordComponent,
     RoleAssignComponent,
-    // PermissionGrantComponent,
-    // UserComponent,
-    // UserDetailComponent,
-    // RoleAssignComponent,
-    // SetPasswordComponent
+     PermissionGrantComponent,
+     UserComponent,
+     UserDetailComponent,
+     RoleAssignComponent,
+     SetPasswordComponent
   ],
   imports: [
     CommonModule,

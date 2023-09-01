@@ -2,8 +2,8 @@ import type { CreateUpdateRoleDto, RoleDto, RoleInListDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
-import type { BaseListFilterDto } from '../commons/models';
-import type { GetPermissionListResultDto, UpdatePermissionsDto } from '../volo/abp/permission-management/models';
+import type { BaseListFilterDto } from '../../commons/models';
+import type { GetPermissionListResultDto, UpdatePermissionsDto } from '../../volo/abp/permission-management/models';
 
 @Injectable({
   providedIn: 'root',

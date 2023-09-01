@@ -1,4 +1,4 @@
-import type { AttributeType } from '../night-market/product-attributes/attribute-type.enum';
+import type { AttributeType } from '../../night-market/catalogs/product-attributes/attribute-type.enum';
 import type { EntityDto } from '@abp/ng.core';
 
 export interface CreateUpdateProductAttributeDto {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using NightMarket.Admin.Catalogs.Products.Attributes;
 using NightMarket.Admin.Commons;
+using NightMarket.Admin.Permissions;
 using NightMarket.Catalogs.ProductAttributes;
 using NightMarket.Catalogs.ProductCategories;
 using NightMarket.Catalogs.Products;
@@ -22,8 +23,9 @@ using Volo.Abp.ObjectMapping;
 
 namespace NightMarket.Admin.Catalogs.Products
 {
+	[Authorize(NightMarketPermissions.Product.Default, Policy = "AdminOnly")]
 
-    public class ProductAppService :
+	public class ProductAppService :
         CrudAppService<
             Product,
             ProductDto,
@@ -71,9 +73,18 @@ namespace NightMarket.Admin.Catalogs.Products
             _attributeDecimalRepository = attributeDecimalRepository;
             _attributeVarcharRepository = attributeVarcharRepository;
             _attributeTextRepository = attributeTextRepository;
-        }
 
-        public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
+			GetPolicyName = NightMarketPermissions.Product.Default;
+			GetListPolicyName = NightMarketPermissions.Product.Default;
+			CreatePolicyName = NightMarketPermissions.Product.Create;
+			UpdatePolicyName = NightMarketPermissions.Product.Update;
+			DeletePolicyName = NightMarketPermissions.Product.Delete;
+
+		}
+
+		[Authorize(NightMarketPermissions.Product.Create)]
+
+		public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
         {
             var product = await _productManager.CreateAsync(input.ManufacturerId,
                 input.Name, input.Code,
@@ -94,7 +105,9 @@ namespace NightMarket.Admin.Catalogs.Products
             return ObjectMapper.Map<Product, ProductDto>(result);
         }
 
-        public override async Task<ProductDto> UpdateAsync(Guid id, CreateUpdateProductDto input)
+		[Authorize(NightMarketPermissions.Product.Update)]
+
+		public override async Task<ProductDto> UpdateAsync(Guid id, CreateUpdateProductDto input)
         {
             var product = await Repository.GetAsync(id);
             if (product == null)
@@ -134,8 +147,9 @@ namespace NightMarket.Admin.Catalogs.Products
         }
 
 
+		[Authorize(NightMarketPermissions.Product.Delete)]
 
-        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
@@ -152,7 +166,9 @@ namespace NightMarket.Admin.Catalogs.Products
             return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
         }
 
-        public async Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(ProductListFilterDto input)
+		[Authorize(NightMarketPermissions.Product.Default)]
+
+		public async Task<PagedResultDto<ProductInListDto>> GetListWithFilterAsync(ProductListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.KeyWord), x => x.Name.Contains(input.KeyWord));
@@ -177,7 +193,9 @@ namespace NightMarket.Admin.Catalogs.Products
             };
         }
 
-        private async Task SaveImagesAsync(string fileName, string base64)
+		[Authorize(NightMarketPermissions.Product.Update)]
+
+		private async Task SaveImagesAsync(string fileName, string base64)
         {
             Regex regex = new Regex(@"^[\w/\:.-]+;base64,");
             base64 = regex.Replace(base64, string.Empty);
@@ -186,7 +204,9 @@ namespace NightMarket.Admin.Catalogs.Products
             await _blobContainer.SaveAsync(fileName, bytes, overrideExisting: true);
         }
 
-        public async Task<string> GetThumbnailImageAsync(string fileName)
+		[Authorize(NightMarketPermissions.Product.Default)]
+
+		public async Task<string> GetThumbnailImageAsync(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
             {
@@ -201,13 +221,16 @@ namespace NightMarket.Admin.Catalogs.Products
             return result;
         }
 
-        public async Task<string> GetSuggestNewCodeAsync()
+
+
+		public async Task<string> GetSuggestNewCodeAsync()
         {
             return await _productCodeGenerator.GenerateAsync();
         }
 
+		[Authorize(NightMarketPermissions.Product.Update)]
 
-        public async Task<ProductAttributeValueDto> AddProductAttributeAsync(AddUpdateProductAttributeDto input)
+		public async Task<ProductAttributeValueDto> AddProductAttributeAsync(AddUpdateProductAttributeDto input)
         {
             var product = await Repository.GetAsync(input.ProductId);
             if (product is null)
@@ -285,8 +308,9 @@ namespace NightMarket.Admin.Catalogs.Products
         }
 
 
+		[Authorize(NightMarketPermissions.Product.Update)]
 
-        public async Task<ProductAttributeValueDto> UpdateProductAttributeAsync(Guid id, AddUpdateProductAttributeDto input)
+		public async Task<ProductAttributeValueDto> UpdateProductAttributeAsync(Guid id, AddUpdateProductAttributeDto input)
         {
             var product = await Repository.GetAsync(input.ProductId);
             if (product is null)
@@ -387,8 +411,9 @@ namespace NightMarket.Admin.Catalogs.Products
                 TextValue = input.TextValue
             };
         }
+		[Authorize(NightMarketPermissions.Product.Update)]
 
-        public async Task RemoveProductAttributeAsync(Guid attributeId, Guid id)
+		public async Task RemoveProductAttributeAsync(Guid attributeId, Guid id)
         {
             var attribute = await _attributeRepository.GetAsync(attributeId);
             if (attribute is null)
@@ -446,8 +471,9 @@ namespace NightMarket.Admin.Catalogs.Products
             }
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
+		[Authorize(NightMarketPermissions.Product.Default)]
 
-        public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
+		public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
         {
             var attributeQuery = await _attributeRepository.GetQueryableAsync();
 
@@ -500,8 +526,9 @@ namespace NightMarket.Admin.Catalogs.Products
                            || x.VarcharId != null);
             return await AsyncExecuter.ToListAsync(query);
         }
+		[Authorize(NightMarketPermissions.Product.Default)]
 
-        public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributeAsync(ProductAttributeListFilterDto input)
+		public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributeAsync(ProductAttributeListFilterDto input)
         {
             var attributeQuery = await _attributeRepository.GetQueryableAsync();
 

@@ -1,6 +1,5 @@
 ﻿using NightMarket.Admin.Catalogs.Products.Attributes;
 using NightMarket.Admin.Commons;
-using NightMarket.Admin.ProductAttributes;
 using System;
 using System.Collections.Generic;
 using System.Text;

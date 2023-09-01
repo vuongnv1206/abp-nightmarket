@@ -1,6 +1,5 @@
 ﻿using NightMarket.Admin.Commons;
 using NightMarket.Catalogs.Manufacturers;
-using NightMarket.ProductCategories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

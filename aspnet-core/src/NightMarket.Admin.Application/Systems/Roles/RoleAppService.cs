@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using NightMarket.Admin.Commons;
+using NightMarket.Admin.Permissions;
 using NightMarket.Roles;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,9 @@ using Volo.Abp.SimpleStateChecking;
 
 namespace NightMarket.Admin.Systems.Roles
 {
-    public class RoleAppService : CrudAppService<
+	[Authorize(IdentityPermissions.Roles.Default, Policy = "AdminOnly")]
+
+	public class RoleAppService : CrudAppService<
         IdentityRole,
         RoleDto,
         Guid,
@@ -46,15 +49,22 @@ namespace NightMarket.Admin.Systems.Roles
             PermissionManager = permissionManager;
             PermissionDefinitionManager = permissionDefinitionManager;
             SimpleStateCheckerManager = simpleStateCheckerManager;
-        }
 
-        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+			GetPolicyName = IdentityPermissions.Roles.Default;
+			GetListPolicyName = IdentityPermissions.Roles.Default;
+			CreatePolicyName = IdentityPermissions.Roles.Create;
+			UpdatePolicyName = IdentityPermissions.Roles.Update;
+			DeletePolicyName = IdentityPermissions.Roles.Delete;
+		}
+
+		[Authorize(IdentityPermissions.Roles.Delete)]
+		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
-
-        public async Task<List<RoleInListDto>> GetListAllAsync()
+		[Authorize(IdentityPermissions.Roles.Default)]
+		public async Task<List<RoleInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
             var data = await AsyncExecuter.ToListAsync(query);
@@ -62,8 +72,8 @@ namespace NightMarket.Admin.Systems.Roles
             return ObjectMapper.Map<List<IdentityRole>, List<RoleInListDto>>(data);
 
         }
-
-        public async Task<PagedResultDto<RoleInListDto>> GetListFilterAsync(BaseListFilterDto input)
+		[Authorize(IdentityPermissions.Roles.Default)]
+		public async Task<PagedResultDto<RoleInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrWhiteSpace(input.KeyWord), x => x.Name.Contains(input.KeyWord));
@@ -77,8 +87,8 @@ namespace NightMarket.Admin.Systems.Roles
 
 
 
-
-        public async override Task<RoleDto> CreateAsync(CreateUpdateRoleDto input)
+		[Authorize(IdentityPermissions.Roles.Create)]
+		public async override Task<RoleDto> CreateAsync(CreateUpdateRoleDto input)
         {
             var query = await Repository.GetQueryableAsync();
             var isNameExisted = query.Any(x => x.Name == input.Name);
@@ -94,8 +104,8 @@ namespace NightMarket.Admin.Systems.Roles
         }
 
 
-
-        public async override Task<RoleDto> UpdateAsync(Guid id, CreateUpdateRoleDto input)
+		[Authorize(IdentityPermissions.Roles.Update)]
+		public async override Task<RoleDto> UpdateAsync(Guid id, CreateUpdateRoleDto input)
         {
             var role = await Repository.GetAsync(id);
             if (role == null)
@@ -114,8 +124,8 @@ namespace NightMarket.Admin.Systems.Roles
             await UnitOfWorkManager.Current.SaveChangesAsync();
             return ObjectMapper.Map<IdentityRole, RoleDto>(data);
         }
-
-        public async Task<GetPermissionListResultDto> GetPermissionsAsync(string providerName, string providerKey)
+		[Authorize(IdentityPermissions.Roles.Default)]
+		public async Task<GetPermissionListResultDto> GetPermissionsAsync(string providerName, string providerKey)
         {
             //await CheckProviderPolicy(providerName);
 
@@ -185,8 +195,8 @@ namespace NightMarket.Admin.Systems.Roles
 
             return result;
         }
-
-        private PermissionGrantInfoDto CreatePermissionGrantInfoDto(PermissionDefinition permission)
+		[Authorize(IdentityPermissions.Roles.Create)]
+		private PermissionGrantInfoDto CreatePermissionGrantInfoDto(PermissionDefinition permission)
         {
             return new PermissionGrantInfoDto
             {
@@ -197,8 +207,8 @@ namespace NightMarket.Admin.Systems.Roles
                 GrantedProviders = new List<ProviderInfoDto>()
             };
         }
-
-        private PermissionGroupDto CreatePermissionGroupDto(PermissionGroupDefinition group)
+		[Authorize(IdentityPermissions.Roles.Create)]
+		private PermissionGroupDto CreatePermissionGroupDto(PermissionGroupDefinition group)
         {
             var localizableDisplayName = group.DisplayName as LocalizableString;
 

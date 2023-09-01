@@ -2,7 +2,7 @@ import type { CreateUpdateProductCategoryDto, ProductCategoryDto, ProductCategor
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
-import type { BaseListFilterDto } from '../commons/models';
+import type { BaseListFilterDto } from '../../commons/models';
 
 @Injectable({
   providedIn: 'root',

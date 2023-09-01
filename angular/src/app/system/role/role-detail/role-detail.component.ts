@@ -1,7 +1,8 @@
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 import { Subject, takeUntil } from 'rxjs';
 import { Component, OnInit,EventEmitter, OnDestroy } from '@angular/core';
-import { RoleDto, RoleService } from '@proxy/roles';
+import { RoleDto, RoleService } from '@proxy/systems/roles';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { UtilityService } from 'src/app/shared/services/utility.service';

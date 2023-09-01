@@ -1,6 +1,6 @@
-import type { BaseListFilterDto } from '../../commons/models';
+import type { BaseListFilterDto } from '../../../commons/models';
 import type { EntityDto } from '@abp/ng.core';
-import type { AttributeType } from '../../night-market/product-attributes/attribute-type.enum';
+import type { AttributeType } from '../../../night-market/catalogs/product-attributes/attribute-type.enum';
 
 export interface AddUpdateProductAttributeDto {
   productId?: string;

@@ -4,6 +4,7 @@ using NightMarket.Admin.Catalogs.ProductAttributes;
 using NightMarket.Admin.Catalogs.ProductCategories;
 using NightMarket.Admin.Catalogs.Products;
 using NightMarket.Admin.Systems.Roles;
+using NightMarket.Admin.Systems.Users;
 using NightMarket.Catalogs.Manufacturers;
 using NightMarket.Catalogs.ProductAttributes;
 using NightMarket.Catalogs.ProductCategories;
@@ -51,5 +52,10 @@ public class NightMarketAdminApplicationAutoMapperProfile : Profile
 			map => map.MapFrom(x => x.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName)
 			? x.ExtraProperties[RoleConsts.DescriptionFieldName] : null));
 		CreateMap<CreateUpdateRoleDto, IdentityRole>();
+
+		//User
+		CreateMap<IdentityUser, UserDto>().ReverseMap();
+		CreateMap<IdentityUser, UserInListDto>().ReverseMap();
+
 	}
 }

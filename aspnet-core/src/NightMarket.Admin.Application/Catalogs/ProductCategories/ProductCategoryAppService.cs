@@ -1,5 +1,8 @@
-﻿using NightMarket.Admin.Commons;
+﻿using Microsoft.AspNetCore.Authorization;
+using NightMarket.Admin.Commons;
+using NightMarket.Admin.Permissions;
 using NightMarket.Catalogs.ProductCategories;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,9 @@ using Volo.Abp.Domain.Repositories;
 
 namespace NightMarket.Admin.Catalogs.ProductCategories
 {
-    public class ProductCategoryAppService :
+	[Authorize(NightMarketPermissions.ProductCategory.Default, Policy = "AdminOnly")]
+
+	public class ProductCategoryAppService :
         CrudAppService<
             ProductCategory,
             ProductCategoryDto,
@@ -23,16 +28,25 @@ namespace NightMarket.Admin.Catalogs.ProductCategories
         //private readonly IRepository<ProductCategory> _repository;
         public ProductCategoryAppService(IRepository<ProductCategory, Guid> repository) : base(repository)
         {
-            //_repository = repository;
-        }
+			//_repository = repository;
+			GetPolicyName = NightMarketPermissions.ProductCategory.Default;
+			GetListPolicyName = NightMarketPermissions.ProductCategory.Default;
+			CreatePolicyName = NightMarketPermissions.ProductCategory.Create;
+			UpdatePolicyName = NightMarketPermissions.ProductCategory.Update;
+			DeletePolicyName = NightMarketPermissions.ProductCategory.Delete;
+		}
 
-        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+		[Authorize(NightMarketPermissions.ProductCategory.Delete)]
+
+		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
-        public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
+		[Authorize(NightMarketPermissions.ProductCategory.Default)]
+
+		public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
 
@@ -43,8 +57,10 @@ namespace NightMarket.Admin.Catalogs.ProductCategories
             return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
 
         }
+		[Authorize(NightMarketPermissions.ProductCategory.Default)]
 
-        public async Task<PagedResultDto<ProductCategoryInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
+
+		public async Task<PagedResultDto<ProductCategoryInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.KeyWord), x => x.Name.Contains(input.KeyWord));

@@ -1,20 +1,20 @@
-import type { CreateUpdateManufacturerDto, ManufacturerDto, ManufacturerInListDto } from './models';
+import type { CreateUpdateProductAttributeDto, ProductAttributeDto, ProductAttributeInListDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
-import type { BaseListFilterDto } from '../commons/models';
+import type { BaseListFilterDto } from '../../commons/models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ManufacturerService {
+export class ProductAttributeService {
   apiName = 'Default';
   
 
-  create = (input: CreateUpdateManufacturerDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, ManufacturerDto>({
+  create = (input: CreateUpdateProductAttributeDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, ProductAttributeDto>({
       method: 'POST',
-      url: '/api/app/manufacturer',
+      url: '/api/app/product-attribute',
       body: input,
     },
     { apiName: this.apiName,...config });
@@ -23,7 +23,7 @@ export class ManufacturerService {
   delete = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: `/api/app/manufacturer/${id}`,
+      url: `/api/app/product-attribute/${id}`,
     },
     { apiName: this.apiName,...config });
   
@@ -31,50 +31,50 @@ export class ManufacturerService {
   deleteMultiple = (ids: string[], config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: '/api/app/manufacturer/multiple',
+      url: '/api/app/product-attribute/multiple',
       params: { ids },
     },
     { apiName: this.apiName,...config });
   
 
   get = (id: string, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, ManufacturerDto>({
+    this.restService.request<any, ProductAttributeDto>({
       method: 'GET',
-      url: `/api/app/manufacturer/${id}`,
+      url: `/api/app/product-attribute/${id}`,
     },
     { apiName: this.apiName,...config });
   
 
   getList = (input: PagedResultRequestDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<ManufacturerDto>>({
+    this.restService.request<any, PagedResultDto<ProductAttributeDto>>({
       method: 'GET',
-      url: '/api/app/manufacturer',
+      url: '/api/app/product-attribute',
       params: { skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
   
 
   getListAll = (config?: Partial<Rest.Config>) =>
-    this.restService.request<any, ManufacturerInListDto[]>({
+    this.restService.request<any, ProductAttributeInListDto[]>({
       method: 'GET',
-      url: '/api/app/manufacturer/all',
+      url: '/api/app/product-attribute/all',
     },
     { apiName: this.apiName,...config });
   
 
   getListWithFilter = (input: BaseListFilterDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<ManufacturerInListDto>>({
+    this.restService.request<any, PagedResultDto<ProductAttributeInListDto>>({
       method: 'GET',
-      url: '/api/app/manufacturer/with-filter',
+      url: '/api/app/product-attribute/with-filter',
       params: { keyWord: input.keyWord, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
   
 
-  update = (id: string, input: CreateUpdateManufacturerDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, ManufacturerDto>({
+  update = (id: string, input: CreateUpdateProductAttributeDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, ProductAttributeDto>({
       method: 'PUT',
-      url: `/api/app/manufacturer/${id}`,
+      url: `/api/app/product-attribute/${id}`,
       body: input,
     },
     { apiName: this.apiName,...config });
