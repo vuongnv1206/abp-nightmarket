@@ -1,5 +1,8 @@
-﻿using NightMarket.Admin.Commons;
+﻿using Microsoft.AspNetCore.Authorization;
+using NightMarket.Admin.Commons;
+using NightMarket.Admin.Permissions;
 using NightMarket.Catalogs.ProductAttributes;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +15,9 @@ using Volo.Abp.ObjectMapping;
 
 namespace NightMarket.Admin.Catalogs.ProductAttributes
 {
-    public class ProductAttributeAppService :
+	[Authorize(NightMarketPermissions.Attribute.Default, Policy = "AdminOnly")]
+
+	public class ProductAttributeAppService :
         CrudAppService<
             ProductAttribute,
             ProductAttributeDto,
@@ -23,15 +28,24 @@ namespace NightMarket.Admin.Catalogs.ProductAttributes
     {
         public ProductAttributeAppService(IRepository<ProductAttribute, Guid> repository) : base(repository)
         {
-        }
+			GetPolicyName = NightMarketPermissions.Attribute.Default;
+			GetListPolicyName = NightMarketPermissions.Attribute.Default;
+			CreatePolicyName = NightMarketPermissions.Attribute.Create;
+			UpdatePolicyName = NightMarketPermissions.Attribute.Update;
+			DeletePolicyName = NightMarketPermissions.Attribute.Delete;
+		}
 
-        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+		[Authorize(NightMarketPermissions.Attribute.Delete)]
+
+		public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
-        public async Task<List<ProductAttributeInListDto>> GetListAllAsync()
+		[Authorize(NightMarketPermissions.Attribute.Default)]
+
+		public async Task<List<ProductAttributeInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
 
@@ -42,7 +56,9 @@ namespace NightMarket.Admin.Catalogs.ProductAttributes
             return ObjectMapper.Map<List<ProductAttribute>, List<ProductAttributeInListDto>>(data);
         }
 
-        public async Task<PagedResultDto<ProductAttributeInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
+		[Authorize(NightMarketPermissions.Attribute.Default)]
+
+		public async Task<PagedResultDto<ProductAttributeInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.KeyWord), x => x.Label.Contains(input.KeyWord));

@@ -31,6 +31,7 @@ using Volo.Abp.VirtualFileSystem;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NightMarket.Admin;
 
@@ -110,14 +111,31 @@ public class NightMarkeAdmintHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "NightMarket.Admin";
-            });
-    }
+		//context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		//    .AddJwtBearer(options =>
+		//    {
+		//        options.Authority = configuration["AuthServer:Authority"];
+		//        options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+		//        options.Audience = "NightMarket.Admin";
+		//    });
+		context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+			.AddJwtBearer(options =>
+			{
+				options.Authority = configuration["AuthServer:Authority"];
+				options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+				options.Audience = "TeduEcommerce.Admin";
+				options.TokenValidationParameters = new
+				   TokenValidationParameters()
+				{
+					ValidateAudience = false,
+					ValidateIssuer = false,
+				};
+			});
+		context.Services.AddAuthorization(options =>
+		{
+			options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+		});
+	}
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
     {

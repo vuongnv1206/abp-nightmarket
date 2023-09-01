@@ -1,4 +1,6 @@
-﻿using NightMarket.Admin.Commons;
+﻿using Microsoft.AspNetCore.Authorization;
+using NightMarket.Admin.Commons;
+using NightMarket.Admin.Permissions;
 using NightMarket.Catalogs.Manufacturers;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ using Volo.Abp.ObjectMapping;
 
 namespace NightMarket.Admin.Catalogs.Manufacturers
 {
+    [Authorize(NightMarketPermissions.Manufacturer.Default,Policy ="AdminOnly")]
     public class ManufacturerAppService :
         CrudAppService<
             Manufacturer,
@@ -23,15 +26,23 @@ namespace NightMarket.Admin.Catalogs.Manufacturers
     {
         public ManufacturerAppService(IRepository<Manufacturer, Guid> repository) : base(repository)
         {
-        }
+			GetPolicyName = NightMarketPermissions.Manufacturer.Default;
+			GetListPolicyName = NightMarketPermissions.Manufacturer.Default;
+			CreatePolicyName = NightMarketPermissions.Manufacturer.Create;
+			UpdatePolicyName = NightMarketPermissions.Manufacturer.Update;
+			DeletePolicyName = NightMarketPermissions.Manufacturer.Delete;
+		}
 
+        [Authorize(NightMarketPermissions.Manufacturer.Delete)]
         public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
-        public async Task<List<ManufacturerInListDto>> GetListAllAsync()
+		[Authorize(NightMarketPermissions.Manufacturer.Default)]
+
+		public async Task<List<ManufacturerInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
 
@@ -41,8 +52,10 @@ namespace NightMarket.Admin.Catalogs.Manufacturers
 
             return ObjectMapper.Map<List<Manufacturer>, List<ManufacturerInListDto>>(data);
         }
+		[Authorize(NightMarketPermissions.Manufacturer.Default)]
 
-        public async Task<PagedResultDto<ManufacturerInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
+
+		public async Task<PagedResultDto<ManufacturerInListDto>> GetListWithFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.KeyWord), x => x.Name.Contains(input.KeyWord));
